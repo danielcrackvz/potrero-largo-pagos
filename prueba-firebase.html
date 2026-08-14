@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Prueba de conexión - U.E. Potrero Largo</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 500px; margin: 40px auto; padding: 0 20px; }
+    button { padding: 10px 16px; margin: 10px 0; cursor: pointer; }
+    #resultado { margin-top: 20px; padding: 12px; background: #f4f4f4; border-radius: 6px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h2>Prueba de conexión con Firebase</h2>
+  <p>Este archivo solo sirve para confirmar que tu proyecto está bien conectado antes de construir el sistema completo.</p>
+
+  <button id="btnGuardar">1. Guardar un estudiante de prueba</button>
+  <button id="btnLeer">2. Leer estudiantes guardados</button>
+
+  <div id="resultado">Aquí aparecerán los resultados...</div>
+
+  <!-- SDK de Firebase (versión compat, más fácil para empezar con JS plano) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <script>
+    // ⚠️ PASO IMPORTANTE: reemplaza esto con TU firebaseConfig
+    // (lo copias desde la consola de Firebase, paso 5 de la guía)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCN9YlG5ZUlKZtuRYx6QWpcdyLsSN3tpko",
+      authDomain: "potrero-largo-pagos.firebaseapp.com",
+      projectId: "potrero-largo-pagos",
+      storageBucket: "potrero-largo-pagos.firebasestorage.app",
+      messagingSenderId: "964536790761",
+      appId: "1:964536790761:web:37082df7af210332ca0a78"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const resultado = document.getElementById("resultado");
+
+    // Botón 1: guarda un documento de prueba en la colección "estudiantes"
+    document.getElementById("btnGuardar").addEventListener("click", async () => {
+      try {
+        await db.collection("estudiantes").add({
+          rude: "1234567LP",
+          nombre: "Juan Pérez (prueba)",
+          curso: "3ro B",
+          creado: new Date().toISOString()
+        });
+        resultado.textContent = "✅ Estudiante de prueba guardado correctamente en Firestore.";
+      } catch (error) {
+        resultado.textContent = "❌ Error al guardar: " + error.message;
+      }
+    });
+
+    // Botón 2: lee todos los estudiantes guardados
+    document.getElementById("btnLeer").addEventListener("click", async () => {
+      try {
+        const snapshot = await db.collection("estudiantes").get();
+        if (snapshot.empty) {
+          resultado.textContent = "No hay estudiantes guardados todavía.";
+          return;
+        }
+        let texto = "📋 Estudiantes encontrados:\n\n";
+        snapshot.forEach(doc => {
+          const d = doc.data();
+          texto += `- ${d.nombre} | RUDE: ${d.rude} | Curso: ${d.curso}\n`;
+        });
+        resultado.textContent = texto;
+      } catch (error) {
+        resultado.textContent = "❌ Error al leer: " + error.message;
+      }
+    });
+  </script>
+</body>
+</html>

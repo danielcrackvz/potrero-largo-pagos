@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Consulta de Mensualidades - U.E. Potrero Largo</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 0 16px;
+    background: #f7f7f9;
+    color: #222;
+  }
+  h1 { font-size: 1.3rem; text-align: center; margin-bottom: 4px; }
+  .subtitulo { text-align: center; color: #666; margin-bottom: 24px; font-size: 0.9rem; }
+  .card {
+    background: white;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  label { display: block; font-size: 0.85rem; margin: 8px 0 4px; font-weight: bold; }
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 14px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  button:hover { background: #1e4fc7; }
+  button:disabled { background: #999; cursor: not-allowed; }
+  .mensualidad {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+  .mensualidad:last-child { border-bottom: none; }
+  .estado {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: bold;
+  }
+  .pendiente { background: #fee2e2; color: #b91c1c; }
+  .en_revision { background: #fef3c7; color: #92400e; }
+  .pagado { background: #dcfce7; color: #15803d; }
+  #resultadoBusqueda { margin-top: 6px; font-size: 0.85rem; }
+  .oculto { display: none; }
+  .qr-img { width: 100%; border-radius: 8px; margin-top: 10px; }
+  .mensaje-info {
+    font-size: 0.85rem;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+  }
+  .info-ok { background: #dcfce7; color: #15803d; }
+  .info-error { background: #fee2e2; color: #b91c1c; }
+</style>
+</head>
+<body>
+
+<h1>U.E. Potrero Largo</h1>
+<p class="subtitulo">Consulta y pago de mensualidades</p>
+
+<!-- Paso 1: Buscar estudiante -->
+<div class="card" id="cardBusqueda">
+  <label for="rude">Código RUDE del estudiante</label>
+  <input type="text" id="rude" placeholder="Ej: 1234567LP" />
+
+  <label for="apellido">Apellido paterno del estudiante</label>
+  <input type="text" id="apellido" placeholder="Ej: Pérez" />
+
+  <button id="btnBuscar">Buscar</button>
+  <div id="resultadoBusqueda"></div>
+</div>
+
+<!-- Paso 2: Mensualidades (oculto hasta encontrar al estudiante) -->
+<div class="card oculto" id="cardMensualidades">
+  <h3 id="nombreEstudiante"></h3>
+  <div id="listaMensualidades"></div>
+</div>
+
+<!-- Paso 3: Pago con QR (oculto hasta encontrar al estudiante) -->
+<div class="card oculto" id="cardQR">
+  <h3>Realiza tu pago</h3>
+  <p style="font-size:0.85rem; color:#555;">Escanea este código QR desde tu banca móvil para pagar la mensualidad de Bs 13.</p>
+  <img class="qr-img" src="URL_DE_TU_IMAGEN_QR_AQUI" alt="QR de pago" />
+</div>
+
+<!-- Paso 4: Subir comprobante -->
+<div class="card oculto" id="cardComprobante">
+  <h3>Subir comprobante de pago</h3>
+  <label for="mesComprobante">¿A qué mes corresponde el pago?</label>
+  <select id="mesComprobante"></select>
+
+  <label for="archivoComprobante">Foto del comprobante</label>
+  <input type="file" id="archivoComprobante" accept="image/*" />
+
+  <button id="btnSubirComprobante">Enviar comprobante</button>
+  <div id="mensajeComprobante"></div>
+</div>
+
+<!-- SDK de Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+  // ⚠️ Reemplaza con tu firebaseConfig real
+  const firebaseConfig = {
+    apiKey: "AIzaSyCN9YlG5ZUlKZtuRYx6QWpcdyLsSN3tpko",
+    authDomain: "potrero-largo-pagos.firebaseapp.com",
+    projectId: "potrero-largo-pagos",
+    storageBucket: "potrero-largo-pagos.firebasestorage.app",
+    messagingSenderId: "964536790761",
+    appId: "1:964536790761:web:37082df7af210332ca0a78"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // ⚠️ Reemplaza con tus datos de Cloudinary (los del paso anterior)
+  const CLOUDINARY_CLOUD_NAME = "iw5zw5hr";
+  const CLOUDINARY_UPLOAD_PRESET = "comprobantes-potrero";
+
+  const meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+  let estudianteActual = null; // guarda el rude encontrado, para usarlo al subir comprobante
+  let mensualidadesActuales = [];
+
+  document.getElementById("btnBuscar").addEventListener("click", buscarEstudiante);
+
+  async function buscarEstudiante() {
+    const rude = document.getElementById("rude").value.trim();
+    const apellido = document.getElementById("apellido").value.trim().toLowerCase();
+    const resultadoDiv = document.getElementById("resultadoBusqueda");
+
+    if (!rude || !apellido) {
+      resultadoDiv.innerHTML = `<div class="mensaje-info info-error">Completa ambos campos.</div>`;
+      return;
+    }
+
+    resultadoDiv.innerHTML = "Buscando...";
+
+    try {
+      const snapshot = await db.collection("estudiantes").where("rude", "==", rude).get();
+
+      if (snapshot.empty) {
+        resultadoDiv.innerHTML = `<div class="mensaje-info info-error">No se encontró ningún estudiante con ese RUDE.</div>`;
+        ocultarSecciones();
+        return;
+      }
+
+      const doc = snapshot.docs[0];
+      const est = doc.data();
+
+      if (est.apellido.toLowerCase() !== apellido) {
+        resultadoDiv.innerHTML = `<div class="mensaje-info info-error">El apellido no coincide con el RUDE ingresado.</div>`;
+        ocultarSecciones();
+        return;
+      }
+
+      // Estudiante válido
+      estudianteActual = est.rude;
+      resultadoDiv.innerHTML = `<div class="mensaje-info info-ok">Estudiante encontrado ✓</div>`;
+      document.getElementById("nombreEstudiante").textContent = `${est.nombre} - ${est.curso}`;
+
+      await cargarMensualidades(est.rude);
+      mostrarSecciones();
+
+    } catch (error) {
+      resultadoDiv.innerHTML = `<div class="mensaje-info info-error">Error al buscar: ${error.message}</div>`;
+    }
+  }
+
+  async function cargarMensualidades(rude) {
+    const snapshot = await db.collection("mensualidades")
+      .where("rude", "==", rude)
+      .orderBy("anio")
+      .orderBy("mes")
+      .get();
+
+    mensualidadesActuales = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    const lista = document.getElementById("listaMensualidades");
+    const selectMes = document.getElementById("mesComprobante");
+    lista.innerHTML = "";
+    selectMes.innerHTML = "";
+
+    if (mensualidadesActuales.length === 0) {
+      lista.innerHTML = `<p style="font-size:0.85rem; color:#666;">Aún no hay mensualidades generadas para este estudiante. Consulta en secretaría.</p>`;
+      return;
+    }
+
+    mensualidadesActuales.forEach(m => {
+      const fila = document.createElement("div");
+      fila.className = "mensualidad";
+      fila.innerHTML = `
+        <span>${meses[m.mes - 1]} ${m.anio} - Bs ${m.monto}</span>
+        <span class="estado ${m.estado}">${etiquetaEstado(m.estado)}</span>
+      `;
+      lista.appendChild(fila);
+
+      // Solo se pueden reportar comprobantes de mensualidades pendientes
+      if (m.estado === "pendiente") {
+        const opcion = document.createElement("option");
+        opcion.value = m.id;
+        opcion.textContent = `${meses[m.mes - 1]} ${m.anio}`;
+        selectMes.appendChild(opcion);
+      }
+    });
+
+    if (selectMes.options.length === 0) {
+      document.getElementById("cardComprobante").classList.add("oculto");
+    }
+  }
+
+  function etiquetaEstado(estado) {
+    if (estado === "pendiente") return "Pendiente";
+    if (estado === "en_revision") return "En revisión";
+    if (estado === "pagado") return "Pagado";
+    return estado;
+  }
+
+  function mostrarSecciones() {
+    document.getElementById("cardMensualidades").classList.remove("oculto");
+    document.getElementById("cardQR").classList.remove("oculto");
+    document.getElementById("cardComprobante").classList.remove("oculto");
+  }
+
+  function ocultarSecciones() {
+    document.getElementById("cardMensualidades").classList.add("oculto");
+    document.getElementById("cardQR").classList.add("oculto");
+    document.getElementById("cardComprobante").classList.add("oculto");
+  }
+
+  // Subida del comprobante
+  document.getElementById("btnSubirComprobante").addEventListener("click", subirComprobante);
+
+  async function subirComprobante() {
+    const mensualidadId = document.getElementById("mesComprobante").value;
+    const archivo = document.getElementById("archivoComprobante").files[0];
+    const mensajeDiv = document.getElementById("mensajeComprobante");
+    const boton = document.getElementById("btnSubirComprobante");
+
+    if (!archivo) {
+      mensajeDiv.innerHTML = `<div class="mensaje-info info-error">Selecciona una imagen primero.</div>`;
+      return;
+    }
+
+    boton.disabled = true;
+    boton.textContent = "Enviando...";
+
+    try {
+      // 1. Subir imagen a Cloudinary
+      const formData = new FormData();
+      formData.append("file", archivo);
+      formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+      const respuesta = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+        { method: "POST", body: formData }
+      );
+      const data = await respuesta.json();
+
+      if (!data.secure_url) throw new Error("No se pudo subir la imagen.");
+
+      // 2. Actualizar el documento de la mensualidad en Firestore
+      await db.collection("mensualidades").doc(mensualidadId).update({
+        estado: "en_revision",
+        comprobanteUrl: data.secure_url,
+        fechaSubida: new Date().toISOString()
+      });
+
+      mensajeDiv.innerHTML = `<div class="mensaje-info info-ok">Comprobante enviado. Quedará como "En revisión" hasta que sea confirmado.</div>`;
+
+      // Refresca la lista para reflejar el nuevo estado
+      await cargarMensualidades(estudianteActual);
+
+    } catch (error) {
+      mensajeDiv.innerHTML = `<div class="mensaje-info info-error">Error al enviar: ${error.message}</div>`;
+    } finally {
+      boton.disabled = false;
+      boton.textContent = "Enviar comprobante";
+    }
+  }
+</script>
+
+</body>
+</html>

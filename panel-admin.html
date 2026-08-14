@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Panel Administrativo - U.E. Potrero Largo</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f4f5f7;
+    color: #222;
+  }
+  header {
+    background: #1e293b;
+    color: white;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header h1 { font-size: 1.1rem; margin: 0; }
+  header button {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  .contenedor { max-width: 900px; margin: 24px auto; padding: 0 16px; }
+
+  /* --- LOGIN --- */
+  #vistaLogin {
+    max-width: 360px;
+    margin: 80px auto;
+    background: white;
+    padding: 28px;
+    border-radius: 10px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+  }
+  #vistaLogin h2 { text-align: center; margin-top: 0; font-size: 1.2rem; }
+  label { display: block; font-size: 0.85rem; margin: 10px 0 4px; font-weight: bold; }
+  input, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.95rem;
+  }
+  button.btn-primario {
+    width: 100%;
+    padding: 11px;
+    margin-top: 16px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  button.btn-primario:hover { background: #1e4fc7; }
+  .error-login { color: #b91c1c; font-size: 0.85rem; margin-top: 10px; text-align: center; }
+
+  /* --- TABS --- */
+  .tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+  .tab {
+    padding: 9px 16px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  .tab.activo { background: #2563eb; color: white; border-color: #2563eb; }
+
+  .oculto { display: none; }
+
+  .card {
+    background: white;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  /* --- Comprobantes pendientes --- */
+  .comprobante-item {
+    display: flex;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+  }
+  .comprobante-item:last-child { border-bottom: none; }
+  .comprobante-item img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+  }
+  .comprobante-info { flex: 1; font-size: 0.85rem; }
+  .comprobante-info strong { display: block; font-size: 0.95rem; }
+  .acciones { display: flex; gap: 6px; }
+  .btn-aprobar, .btn-rechazar {
+    padding: 7px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    color: white;
+  }
+  .btn-aprobar { background: #16a34a; }
+  .btn-rechazar { background: #dc2626; }
+
+  /* --- Listado estudiantes --- */
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid #eee; }
+  th { color: #555; font-size: 0.75rem; text-transform: uppercase; }
+  .badge { padding: 3px 9px; border-radius: 999px; font-size: 0.72rem; font-weight: bold; }
+  .badge-ok { background: #dcfce7; color: #15803d; }
+  .badge-deuda { background: #fee2e2; color: #b91c1c; }
+
+  .vacio { text-align: center; color: #888; padding: 20px; font-size: 0.85rem; }
+
+  /* --- Modal imagen --- */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.75);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+  }
+  .modal-overlay img { max-width: 90%; max-height: 90%; border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div id="vistaLogin">
+  <h2>Panel Administrativo<br><small style="font-weight:normal; color:#666;">U.E. Potrero Largo</small></h2>
+  <label for="loginEmail">Correo</label>
+  <input type="email" id="loginEmail" placeholder="admin@potrerolargo.com" />
+  <label for="loginPass">Contraseña</label>
+  <input type="password" id="loginPass" />
+  <button class="btn-primario" id="btnLogin">Ingresar</button>
+  <div class="error-login" id="errorLogin"></div>
+</div>
+
+<!-- ================= PANEL (oculto hasta iniciar sesión) ================= -->
+<div id="vistaPanel" class="oculto">
+  <header>
+    <h1>Panel Administrativo - U.E. Potrero Largo</h1>
+    <button id="btnLogout">Cerrar sesión</button>
+  </header>
+
+  <div class="contenedor">
+    <div class="tabs">
+      <div class="tab activo" data-tab="revision">Comprobantes por revisar</div>
+      <div class="tab" data-tab="estudiantes">Estudiantes y deudas</div>
+      <div class="tab" data-tab="registro">Registrar estudiante</div>
+    </div>
+
+    <!-- TAB 1: comprobantes en revisión -->
+    <div id="tabRevision" class="card">
+      <h3 style="margin-top:0;">Comprobantes pendientes de aprobación</h3>
+      <div id="listaComprobantes"><p class="vacio">Cargando...</p></div>
+    </div>
+
+    <!-- TAB 2: listado de estudiantes -->
+    <div id="tabEstudiantes" class="card oculto">
+      <h3 style="margin-top:0;">Estudiantes y estado de mensualidades</h3>
+      <table>
+        <thead>
+          <tr><th>RUDE</th><th>Nombre</th><th>Curso</th><th>Meses pendientes</th><th>Estado</th></tr>
+        </thead>
+        <tbody id="tablaEstudiantes"></tbody>
+      </table>
+    </div>
+
+    <!-- TAB 3: registrar nuevo estudiante -->
+    <div id="tabRegistro" class="card oculto">
+      <h3 style="margin-top:0;">Registrar nuevo estudiante</h3>
+      <p style="font-size:0.8rem; color:#666; margin-top:-8px;">
+        Al guardar, se crean automáticamente las 12 mensualidades del año (Enero a Diciembre) en estado "pendiente".
+      </p>
+
+      <label for="regRude">Código RUDE</label>
+      <input type="text" id="regRude" placeholder="Ej: 1234567LP" />
+
+      <label for="regNombre">Nombre completo</label>
+      <input type="text" id="regNombre" placeholder="Ej: Juan Pérez Mamani" />
+
+      <label for="regApellido">Apellido paterno (para validar la consulta del padre)</label>
+      <input type="text" id="regApellido" placeholder="Ej: Pérez" />
+
+      <label for="regCurso">Curso</label>
+      <input type="text" id="regCurso" placeholder="Ej: 3ro B" />
+
+      <label for="regNombrePadre">Nombre del padre/madre responsable</label>
+      <input type="text" id="regNombrePadre" placeholder="Ej: María Mamani" />
+
+      <label for="regTelefono">Teléfono de contacto</label>
+      <input type="text" id="regTelefono" placeholder="Ej: 70012345" />
+
+      <label for="regAnio">Año de las mensualidades a generar</label>
+      <input type="number" id="regAnio" value="2026" />
+
+      <label for="regMonto">Monto de la mensualidad (Bs)</label>
+      <input type="number" id="regMonto" value="13" />
+
+      <button class="btn-primario" id="btnRegistrarEstudiante">Guardar estudiante y generar mensualidades</button>
+      <div id="mensajeRegistro" style="margin-top:10px; font-size:0.85rem;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SDK de Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+  // ⚠️ Reemplaza con tu firebaseConfig real (el mismo de los otros archivos)
+  const firebaseConfig = {
+    apiKey: "AIzaSyCN9YlG5ZUlKZtuRYx6QWpcdyLsSN3tpko",
+    authDomain: "potrero-largo-pagos.firebaseapp.com",
+    projectId: "potrero-largo-pagos",
+    storageBucket: "potrero-largo-pagos.firebasestorage.app",
+    messagingSenderId: "964536790761",
+    appId: "1:964536790761:web:37082df7af210332ca0a78"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  const meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+  // ---------- LOGIN ----------
+  document.getElementById("btnLogin").addEventListener("click", async () => {
+    const email = document.getElementById("loginEmail").value.trim();
+    const pass = document.getElementById("loginPass").value;
+    const errorDiv = document.getElementById("errorLogin");
+    errorDiv.textContent = "";
+
+    try {
+      await auth.signInWithEmailAndPassword(email, pass);
+    } catch (error) {
+      errorDiv.textContent = "Correo o contraseña incorrectos.";
+    }
+  });
+
+  document.getElementById("btnLogout").addEventListener("click", () => auth.signOut());
+
+  // Detecta si ya hay sesión iniciada (o cuando cambia)
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      document.getElementById("vistaLogin").classList.add("oculto");
+      document.getElementById("vistaPanel").classList.remove("oculto");
+      cargarComprobantesPendientes();
+      cargarEstudiantes();
+    } else {
+      document.getElementById("vistaLogin").classList.remove("oculto");
+      document.getElementById("vistaPanel").classList.add("oculto");
+    }
+  });
+
+  // ---------- TABS ----------
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("activo"));
+      tab.classList.add("activo");
+      document.getElementById("tabRevision").classList.toggle("oculto", tab.dataset.tab !== "revision");
+      document.getElementById("tabEstudiantes").classList.toggle("oculto", tab.dataset.tab !== "estudiantes");
+      document.getElementById("tabRegistro").classList.toggle("oculto", tab.dataset.tab !== "registro");
+    });
+  });
+
+  // ---------- TAB 1: Comprobantes pendientes ----------
+  async function cargarComprobantesPendientes() {
+    const contenedor = document.getElementById("listaComprobantes");
+    contenedor.innerHTML = "<p class='vacio'>Cargando...</p>";
+
+    const snapshot = await db.collection("mensualidades").where("estado", "==", "en_revision").get();
+
+    if (snapshot.empty) {
+      contenedor.innerHTML = "<p class='vacio'>No hay comprobantes pendientes por revisar 🎉</p>";
+      return;
+    }
+
+    // Junta cada mensualidad con los datos del estudiante correspondiente
+    const items = [];
+    for (const doc of snapshot.docs) {
+      const m = { id: doc.id, ...doc.data() };
+      const estSnap = await db.collection("estudiantes").where("rude", "==", m.rude).get();
+      m.nombreEstudiante = estSnap.empty ? "(estudiante no encontrado)" : estSnap.docs[0].data().nombre;
+      items.push(m);
+    }
+
+    contenedor.innerHTML = "";
+    items.forEach(m => {
+      const div = document.createElement("div");
+      div.className = "comprobante-item";
+      div.innerHTML = `
+        <img src="${m.comprobanteUrl}" alt="Comprobante" onclick="verImagenGrande('${m.comprobanteUrl}')" />
+        <div class="comprobante-info">
+          <strong>${m.nombreEstudiante}</strong>
+          RUDE: ${m.rude} — ${meses[m.mes - 1]} ${m.anio} — Bs ${m.monto}
+        </div>
+        <div class="acciones">
+          <button class="btn-aprobar" data-id="${m.id}">Aprobar</button>
+          <button class="btn-rechazar" data-id="${m.id}">Rechazar</button>
+        </div>
+      `;
+      contenedor.appendChild(div);
+    });
+
+    // Eventos de aprobar / rechazar
+    contenedor.querySelectorAll(".btn-aprobar").forEach(btn => {
+      btn.addEventListener("click", () => actualizarEstadoMensualidad(btn.dataset.id, "pagado"));
+    });
+    contenedor.querySelectorAll(".btn-rechazar").forEach(btn => {
+      btn.addEventListener("click", () => actualizarEstadoMensualidad(btn.dataset.id, "pendiente"));
+    });
+  }
+
+  async function actualizarEstadoMensualidad(id, nuevoEstado) {
+    await db.collection("mensualidades").doc(id).update({
+      estado: nuevoEstado,
+      fechaAprobado: nuevoEstado === "pagado" ? new Date().toISOString() : null
+    });
+    cargarComprobantesPendientes(); // refresca la bandeja
+    cargarEstudiantes(); // refresca el listado general también
+  }
+
+  function verImagenGrande(url) {
+    const overlay = document.createElement("div");
+    overlay.className = "modal-overlay";
+    overlay.innerHTML = `<img src="${url}" />`;
+    overlay.addEventListener("click", () => overlay.remove());
+    document.body.appendChild(overlay);
+  }
+
+  // ---------- TAB 2: Estudiantes y deudas ----------
+  async function cargarEstudiantes() {
+    const tabla = document.getElementById("tablaEstudiantes");
+    tabla.innerHTML = `<tr><td colspan="5" class="vacio">Cargando...</td></tr>`;
+
+    const estudiantesSnap = await db.collection("estudiantes").get();
+    const filas = [];
+
+    for (const doc of estudiantesSnap.docs) {
+      const est = doc.data();
+      const mensualidadesSnap = await db.collection("mensualidades")
+        .where("rude", "==", est.rude)
+        .where("estado", "!=", "pagado")
+        .get();
+
+      const pendientes = mensualidadesSnap.size;
+
+      filas.push(`
+        <tr>
+          <td>${est.rude}</td>
+          <td>${est.nombre}</td>
+          <td>${est.curso}</td>
+          <td>${pendientes}</td>
+          <td>${pendientes === 0
+            ? '<span class="badge badge-ok">Al día</span>'
+            : `<span class="badge badge-deuda">${pendientes} pendiente(s)</span>`}</td>
+        </tr>
+      `);
+    }
+
+    tabla.innerHTML = filas.length ? filas.join("") : `<tr><td colspan="5" class="vacio">No hay estudiantes registrados aún.</td></tr>`;
+  }
+
+  // ---------- TAB 3: Registrar estudiante + generar 12 mensualidades ----------
+  document.getElementById("btnRegistrarEstudiante").addEventListener("click", registrarEstudiante);
+
+  async function registrarEstudiante() {
+    const rude = document.getElementById("regRude").value.trim();
+    const nombre = document.getElementById("regNombre").value.trim();
+    const apellido = document.getElementById("regApellido").value.trim();
+    const curso = document.getElementById("regCurso").value.trim();
+    const nombrePadre = document.getElementById("regNombrePadre").value.trim();
+    const telefono = document.getElementById("regTelefono").value.trim();
+    const anio = parseInt(document.getElementById("regAnio").value);
+    const monto = parseFloat(document.getElementById("regMonto").value);
+
+    const mensajeDiv = document.getElementById("mensajeRegistro");
+    const boton = document.getElementById("btnRegistrarEstudiante");
+
+    if (!rude || !nombre || !apellido || !curso) {
+      mensajeDiv.innerHTML = `<div class="error-login">Completa al menos RUDE, nombre, apellido y curso.</div>`;
+      return;
+    }
+
+    boton.disabled = true;
+    boton.textContent = "Guardando...";
+    mensajeDiv.innerHTML = "";
+
+    try {
+      // 1. Verifica que no exista ya un estudiante con ese RUDE
+      const existente = await db.collection("estudiantes").where("rude", "==", rude).get();
+      if (!existente.empty) {
+        throw new Error("Ya existe un estudiante registrado con ese RUDE.");
+      }
+
+      // 2. Guarda el estudiante
+      await db.collection("estudiantes").add({
+        rude, nombre, apellido, curso, nombrePadre,
+        telefonoContacto: telefono,
+        activo: true
+      });
+
+      // 3. Genera las 12 mensualidades del año usando un batch (una sola operación atómica)
+      const batch = db.batch();
+      for (let mes = 1; mes <= 12; mes++) {
+        const ref = db.collection("mensualidades").doc(); // ID automático
+        batch.set(ref, {
+          rude, mes, anio, monto,
+          estado: "pendiente",
+          comprobanteUrl: null,
+          fechaSubida: null,
+          fechaAprobado: null
+        });
+      }
+      await batch.commit();
+
+      mensajeDiv.innerHTML = `<div class="mensaje-info info-ok" style="padding:10px; border-radius:6px; background:#dcfce7; color:#15803d;">Estudiante registrado y 12 mensualidades generadas correctamente ✓</div>`;
+
+      // Limpia el formulario
+      ["regRude","regNombre","regApellido","regCurso","regNombrePadre","regTelefono"].forEach(id => document.getElementById(id).value = "");
+
+      // Refresca el listado de estudiantes por si el admin cambia de pestaña
+      cargarEstudiantes();
+
+    } catch (error) {
+      mensajeDiv.innerHTML = `<div class="error-login">Error: ${error.message}</div>`;
+    } finally {
+      boton.disabled = false;
+      boton.textContent = "Guardar estudiante y generar mensualidades";
+    }
+  }
+</script>
+
+</body>
+</html>
