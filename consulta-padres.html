@@ -4,118 +4,370 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Consulta de Mensualidades - U.E. Potrero Largo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --navy-950: #0A1F38;
+    --navy-800: #123A5E;
+    --navy-700: #1B4A72;
+    --navy-600: #2D6FA6;
+    --gold-500: #C89B3C;
+    --gold-600: #A87C22;
+    --gold-100: #F6E9CB;
+    --paper: #F7F5EF;
+    --white: #FFFFFF;
+    --ink: #152436;
+    --ink-soft: #566374;
+    --border: #E3DFD3;
+    --success: #2F6B4F;
+    --success-bg: #E3F1E8;
+    --danger: #A23B2E;
+    --danger-bg: #F7E7E3;
+    --warning: #B4791F;
+    --warning-bg: #FBEEDA;
+    --shadow: 0 1px 2px rgba(10,31,56,0.06), 0 8px 24px -12px rgba(10,31,56,0.18);
+  }
   * { box-sizing: border-box; }
   body {
-    font-family: Arial, sans-serif;
-    max-width: 600px;
-    margin: 30px auto;
-    padding: 0 16px;
-    background: #f7f7f9;
-    color: #222;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
   }
-  h1 { font-size: 1.3rem; text-align: center; margin-bottom: 4px; }
-  .subtitulo { text-align: center; color: #666; margin-bottom: 24px; font-size: 0.9rem; }
+  h1, h2, h3 { font-family: 'Fraunces', serif; margin: 0; color: var(--navy-950); }
+  .oculto { display: none !important; }
+
+  /* ---------- HEADER ---------- */
+  .site-header {
+    background: linear-gradient(180deg, var(--navy-950) 0%, var(--navy-800) 100%);
+    padding: 22px 20px;
+    border-bottom: 3px solid var(--gold-500);
+  }
+  .header-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .crest {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));
+  }
+  .header-text .eyebrow {
+    margin: 0;
+    color: var(--gold-500);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .header-text h1 {
+    color: var(--white);
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 38px 20px 8px;
+    text-align: center;
+    position: relative;
+  }
+  .hero h2 {
+    font-size: 1.7rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+  .hero p {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    max-width: 440px;
+    margin: 10px auto 0;
+    line-height: 1.5;
+  }
+
+  main { padding-bottom: 60px; }
+
+  /* ---------- CARDS ---------- */
+  .contenedor { max-width: 640px; margin: 0 auto; padding: 0 20px; }
   .card {
-    background: white;
-    border-radius: 10px;
-    padding: 18px;
-    margin-bottom: 16px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 26px;
+    margin-top: 22px;
+    box-shadow: var(--shadow);
   }
-  label { display: block; font-size: 0.85rem; margin: 8px 0 4px; font-weight: bold; }
-  input {
+  .card-eyebrow {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gold-600);
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+  .card h3.card-title {
+    font-size: 1.15rem;
+    margin-bottom: 4px;
+  }
+
+  label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--navy-800);
+    margin: 16px 0 6px;
+  }
+  label:first-of-type { margin-top: 4px; }
+  input, select {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
+    padding: 12px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--navy-600);
+    box-shadow: 0 0 0 3px rgba(45,111,166,0.15);
+    background: var(--white);
+  }
+
   button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 14px;
-    background: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
     cursor: pointer;
   }
-  button:hover { background: #1e4fc7; }
-  button:disabled { background: #999; cursor: not-allowed; }
+  .btn-primario {
+    width: 100%;
+    padding: 13px;
+    margin-top: 20px;
+    background: var(--navy-800);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .btn-primario:hover { background: var(--navy-700); }
+  .btn-primario:active { transform: scale(0.99); }
+  .btn-primario:disabled { background: #9AA5B1; cursor: not-allowed; }
+
+  #resultadoBusqueda { margin-top: 4px; }
+  .mensaje-info {
+    font-size: 0.83rem;
+    padding: 10px 13px;
+    border-radius: 8px;
+    margin-top: 12px;
+    font-weight: 500;
+  }
+  .info-ok { background: var(--success-bg); color: var(--success); }
+  .info-error { background: var(--danger-bg); color: var(--danger); }
+
+  /* ---------- RESULTADO / LEDGER ---------- */
+  .resultado-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .seal-mini {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--gold-100);
+    border: 2px solid var(--gold-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold-600);
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  #nombreEstudiante { font-size: 1.05rem; font-weight: 600; color: var(--navy-950); }
+
   .mensualidad {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
+    padding: 13px 0;
+    border-bottom: 1px solid #F0EEE6;
+    font-variant-numeric: tabular-nums;
   }
   .mensualidad:last-child { border-bottom: none; }
+  .mensualidad span:first-child { font-size: 0.92rem; color: var(--ink); }
+
   .estado {
-    font-size: 0.75rem;
-    padding: 4px 10px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 5px 12px;
     border-radius: 999px;
-    font-weight: bold;
   }
-  .pendiente { background: #fee2e2; color: #b91c1c; }
-  .en_revision { background: #fef3c7; color: #92400e; }
-  .pagado { background: #dcfce7; color: #15803d; }
-  #resultadoBusqueda { margin-top: 6px; font-size: 0.85rem; }
-  .oculto { display: none; }
-  .qr-img { width: 100%; border-radius: 8px; margin-top: 10px; }
-  .mensaje-info {
-    font-size: 0.85rem;
+  .estado.pendiente { background: var(--danger-bg); color: var(--danger); }
+  .estado.en_revision { background: var(--warning-bg); color: var(--warning); }
+  .estado.pagado {
+    background: var(--gold-100);
+    color: var(--gold-600);
+    border: 1.5px solid var(--gold-500);
+    position: relative;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    letter-spacing: 0.02em;
+  }
+
+  /* ---------- QR / TICKET ---------- */
+  .qr-card {
+    background: linear-gradient(180deg, var(--navy-950), var(--navy-800));
+    color: var(--white);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .qr-card::before, .qr-card::after {
+    content: "";
+    position: absolute;
+    width: 24px; height: 24px;
+    background: var(--paper);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .qr-card .card-eyebrow { color: var(--gold-500); }
+  .qr-card h3 { color: var(--white); }
+  .qr-card p { color: #C7D3E0; font-size: 0.85rem; max-width: 340px; margin: 6px auto 18px; }
+  .qr-frame {
+    background: var(--white);
+    padding: 14px;
+    border-radius: 12px;
+    display: inline-block;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+  }
+  .qr-img { width: 220px; max-width: 100%; display: block; border-radius: 4px; }
+  .qr-amount {
+    margin-top: 16px;
+    display: inline-block;
+    padding: 6px 16px;
+    border: 1.5px solid var(--gold-500);
+    border-radius: 999px;
+    color: var(--gold-500);
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+
+  /* ---------- UPLOAD ---------- */
+  input[type="file"] {
     padding: 10px;
-    border-radius: 6px;
-    margin-top: 10px;
+    background: var(--white);
+    font-size: 0.85rem;
   }
-  .info-ok { background: #dcfce7; color: #15803d; }
-  .info-error { background: #fee2e2; color: #b91c1c; }
+
+  /* ---------- FOOTER ---------- */
+  .site-footer {
+    text-align: center;
+    padding: 26px 20px 40px;
+    color: var(--ink-soft);
+    font-size: 0.78rem;
+  }
+  .site-footer strong { color: var(--navy-800); }
 </style>
 </head>
 <body>
 
-<h1>U.E. Potrero Largo</h1>
-<p class="subtitulo">Consulta y pago de mensualidades</p>
+<header class="site-header">
+  <div class="header-inner">
+    <img class="crest" src="https://res.cloudinary.com/iw5zw5hr/image/upload/v1786712080/logopotrerolargo.png" alt="Escudo U.E. Potrero Largo" />
+    <div class="header-text">
+      <p class="eyebrow">Unidad Educativa</p>
+      <h1>Potrero Largo</h1>
+    </div>
+  </div>
+</header>
 
-<!-- Paso 1: Buscar estudiante -->
-<div class="card" id="cardBusqueda">
-  <label for="rude">Código RUDE del estudiante</label>
-  <input type="text" id="rude" placeholder="Ej: 1234567LP" />
+<main>
+  <div class="hero">
+    <h2>Consulta y pago de tu mensualidad</h2>
+    <p>Verifica el estado de las mensualidades de tu hijo o hija y reporta tu pago en minutos, sin necesidad de venir al colegio.</p>
+  </div>
 
-  <label for="apellido">Apellido paterno del estudiante</label>
-  <input type="text" id="apellido" placeholder="Ej: Pérez" />
+  <div class="contenedor">
 
-  <button id="btnBuscar">Buscar</button>
-  <div id="resultadoBusqueda"></div>
-</div>
+    <!-- Paso 1: Buscar estudiante -->
+    <div class="card" id="cardBusqueda">
+      <p class="card-eyebrow">Paso 1</p>
+      <h3 class="card-title">Busca al estudiante</h3>
+      <label for="rude">Código RUDE del estudiante</label>
+      <input type="text" id="rude" placeholder="Ej: 1234567LP" />
 
-<!-- Paso 2: Mensualidades (oculto hasta encontrar al estudiante) -->
-<div class="card oculto" id="cardMensualidades">
-  <h3 id="nombreEstudiante"></h3>
-  <div id="listaMensualidades"></div>
-</div>
+      <label for="apellido">Apellido paterno del estudiante</label>
+      <input type="text" id="apellido" placeholder="Ej: Pérez" />
 
-<!-- Paso 3: Pago con QR (oculto hasta encontrar al estudiante) -->
-<div class="card oculto" id="cardQR">
-  <h3>Realiza tu pago</h3>
-  <p style="font-size:0.85rem; color:#555;">Escanea este código QR desde tu banca móvil para pagar la mensualidad de Bs 13.</p>
-  <img class="qr-img" src="https://res.cloudinary.com/iw5zw5hr/image/upload/v1786693692/WhatsApp_Image_2026-08-12_at_15.03.13.jpg" alt="QR de pago" />
-</div>
+      <button class="btn-primario" id="btnBuscar">Buscar</button>
+      <div id="resultadoBusqueda"></div>
+    </div>
 
-<!-- Paso 4: Subir comprobante -->
-<div class="card oculto" id="cardComprobante">
-  <h3>Subir comprobante de pago</h3>
-  <label for="mesComprobante">¿A qué mes corresponde el pago?</label>
-  <select id="mesComprobante"></select>
+    <!-- Paso 2: Mensualidades -->
+    <div class="card oculto" id="cardMensualidades">
+      <div class="resultado-header">
+        <div class="seal-mini">✓</div>
+        <div>
+          <p class="card-eyebrow" style="margin-bottom:2px;">Estudiante encontrado</p>
+          <h3 id="nombreEstudiante"></h3>
+        </div>
+      </div>
+      <div id="listaMensualidades"></div>
+    </div>
 
-  <label for="archivoComprobante">Foto del comprobante</label>
-  <input type="file" id="archivoComprobante" accept="image/*" />
+    <!-- Paso 3: QR -->
+    <div class="card qr-card oculto" id="cardQR">
+      <p class="card-eyebrow">Paso 2</p>
+      <h3>Realiza tu pago</h3>
+      <p>Escanea este código desde tu banca móvil para pagar la mensualidad.</p>
+      <div class="qr-frame">
+        <img class="qr-img" src="https://res.cloudinary.com/iw5zw5hr/image/upload/v1786693692/WhatsApp_Image_2026-08-12_at_15.03.13.jpg" alt="QR de pago" />
+      </div>
+      <br>
+      <span class="qr-amount">Bs 13 por mensualidad</span>
+    </div>
 
-  <button id="btnSubirComprobante">Enviar comprobante</button>
-  <div id="mensajeComprobante"></div>
-</div>
+    <!-- Paso 4: Comprobante -->
+    <div class="card oculto" id="cardComprobante">
+      <p class="card-eyebrow">Paso 3</p>
+      <h3 class="card-title">Sube tu comprobante de pago</h3>
+      <label for="mesComprobante">¿A qué mes corresponde el pago?</label>
+      <select id="mesComprobante"></select>
+
+      <label for="archivoComprobante">Foto del comprobante</label>
+      <input type="file" id="archivoComprobante" accept="image/*" />
+
+      <button class="btn-primario" id="btnSubirComprobante">Enviar comprobante</button>
+      <div id="mensajeComprobante"></div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <strong>U.E. Potrero Largo</strong> — Sistema de mensualidades
+</footer>
 
 <!-- SDK de Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -134,13 +386,13 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
-  // ⚠️ Reemplaza con tus datos de Cloudinary (los del paso anterior)
-  const CLOUDINARY_CLOUD_NAME = "iw5zw5hr";
-  const CLOUDINARY_UPLOAD_PRESET = "comprobantes-potrero";
+  // ⚠️ Reemplaza con tus datos de Cloudinary
+  const CLOUDINARY_CLOUD_NAME = "TU_CLOUD_NAME";
+  const CLOUDINARY_UPLOAD_PRESET = "TU_UPLOAD_PRESET";
 
   const meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
-  let estudianteActual = null; // guarda el rude encontrado, para usarlo al subir comprobante
+  let estudianteActual = null;
   let mensualidadesActuales = [];
 
   document.getElementById("btnBuscar").addEventListener("click", buscarEstudiante);
@@ -155,7 +407,7 @@
       return;
     }
 
-    resultadoDiv.innerHTML = "Buscando...";
+    resultadoDiv.innerHTML = "";
 
     try {
       const snapshot = await db.collection("estudiantes").where("rude", "==", rude).get();
@@ -175,10 +427,9 @@
         return;
       }
 
-      // Estudiante válido
       estudianteActual = est.rude;
       resultadoDiv.innerHTML = `<div class="mensaje-info info-ok">Estudiante encontrado ✓</div>`;
-      document.getElementById("nombreEstudiante").textContent = `${est.nombre} - ${est.curso}`;
+      document.getElementById("nombreEstudiante").textContent = `${est.nombre} — ${est.curso}`;
 
       await cargarMensualidades(est.rude);
       mostrarSecciones();
@@ -203,7 +454,7 @@
     selectMes.innerHTML = "";
 
     if (mensualidadesActuales.length === 0) {
-      lista.innerHTML = `<p style="font-size:0.85rem; color:#666;">Aún no hay mensualidades generadas para este estudiante. Consulta en secretaría.</p>`;
+      lista.innerHTML = `<p style="font-size:0.85rem; color:var(--ink-soft);">Aún no hay mensualidades generadas para este estudiante. Consulta en secretaría.</p>`;
       return;
     }
 
@@ -211,12 +462,11 @@
       const fila = document.createElement("div");
       fila.className = "mensualidad";
       fila.innerHTML = `
-        <span>${meses[m.mes - 1]} ${m.anio} - Bs ${m.monto}</span>
+        <span>${meses[m.mes - 1]} ${m.anio} — Bs ${m.monto}</span>
         <span class="estado ${m.estado}">${etiquetaEstado(m.estado)}</span>
       `;
       lista.appendChild(fila);
 
-      // Solo se pueden reportar comprobantes de mensualidades pendientes
       if (m.estado === "pendiente") {
         const opcion = document.createElement("option");
         opcion.value = m.id;
@@ -249,7 +499,6 @@
     document.getElementById("cardComprobante").classList.add("oculto");
   }
 
-  // Subida del comprobante
   document.getElementById("btnSubirComprobante").addEventListener("click", subirComprobante);
 
   async function subirComprobante() {
@@ -267,7 +516,6 @@
     boton.textContent = "Enviando...";
 
     try {
-      // 1. Subir imagen a Cloudinary
       const formData = new FormData();
       formData.append("file", archivo);
       formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
@@ -280,7 +528,6 @@
 
       if (!data.secure_url) throw new Error("No se pudo subir la imagen.");
 
-      // 2. Actualizar el documento de la mensualidad en Firestore
       await db.collection("mensualidades").doc(mensualidadId).update({
         estado: "en_revision",
         comprobanteUrl: data.secure_url,
@@ -289,7 +536,6 @@
 
       mensajeDiv.innerHTML = `<div class="mensaje-info info-ok">Comprobante enviado. Quedará como "En revisión" hasta que sea confirmado.</div>`;
 
-      // Refresca la lista para reflejar el nuevo estado
       await cargarMensualidades(estudianteActual);
 
     } catch (error) {

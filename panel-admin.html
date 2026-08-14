@@ -4,156 +4,258 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Panel Administrativo - U.E. Potrero Largo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --navy-950: #0A1F38;
+    --navy-800: #123A5E;
+    --navy-700: #1B4A72;
+    --navy-600: #2D6FA6;
+    --gold-500: #C89B3C;
+    --gold-600: #A87C22;
+    --gold-100: #F6E9CB;
+    --paper: #F7F5EF;
+    --white: #FFFFFF;
+    --ink: #152436;
+    --ink-soft: #566374;
+    --border: #E3DFD3;
+    --success: #2F6B4F;
+    --success-bg: #E3F1E8;
+    --danger: #A23B2E;
+    --danger-bg: #F7E7E3;
+    --warning: #B4791F;
+    --warning-bg: #FBEEDA;
+    --shadow: 0 1px 2px rgba(10,31,56,0.06), 0 8px 24px -12px rgba(10,31,56,0.18);
+  }
   * { box-sizing: border-box; }
   body {
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
     margin: 0;
-    background: #f4f5f7;
-    color: #222;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
   }
+  h1, h2, h3 { font-family: 'Fraunces', serif; margin: 0; color: var(--navy-950); }
+  .oculto { display: none !important; }
+
+  /* ---------- LOGIN ---------- */
+  #vistaLogin {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 0%, var(--navy-800) 0%, var(--navy-950) 60%);
+    padding: 20px;
+  }
+  .login-box {
+    max-width: 380px;
+    width: 100%;
+    background: var(--white);
+    padding: 34px 30px;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px -20px rgba(0,0,0,0.5);
+    text-align: center;
+  }
+  .login-crest {
+    width: 58px; height: 58px;
+    object-fit: contain;
+    margin: 0 auto 14px;
+    display: block;
+  }
+  .login-box .eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-600);
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+  .login-box h2 { font-size: 1.3rem; margin-bottom: 22px; }
+  label { display: block; text-align: left; font-size: 0.78rem; font-weight: 600; color: var(--navy-800); margin: 12px 0 6px; }
+  input, select {
+    width: 100%;
+    padding: 12px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--navy-600);
+    box-shadow: 0 0 0 3px rgba(45,111,166,0.15);
+    background: var(--white);
+  }
+  button { font-family: 'Inter', sans-serif; cursor: pointer; }
+  .btn-primario {
+    width: 100%;
+    padding: 13px;
+    margin-top: 20px;
+    background: var(--navy-800);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: background 0.15s ease;
+  }
+  .btn-primario:hover { background: var(--navy-700); }
+  .btn-primario:disabled { background: #9AA5B1; cursor: not-allowed; }
+  .error-login { color: var(--danger); background: var(--danger-bg); padding: 9px 12px; border-radius: 8px; font-size: 0.83rem; margin-top: 14px; }
+
+  /* ---------- HEADER (panel) ---------- */
   header {
-    background: #1e293b;
-    color: white;
-    padding: 14px 20px;
+    background: linear-gradient(180deg, var(--navy-950), var(--navy-800));
+    padding: 16px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 3px solid var(--gold-500);
   }
-  header h1 { font-size: 1.1rem; margin: 0; }
-  header button {
-    background: #ef4444;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.85rem;
-  }
-  .contenedor { max-width: 900px; margin: 24px auto; padding: 0 16px; }
-
-  /* --- LOGIN --- */
-  #vistaLogin {
-    max-width: 360px;
-    margin: 80px auto;
-    background: white;
-    padding: 28px;
-    border-radius: 10px;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.1);
-  }
-  #vistaLogin h2 { text-align: center; margin-top: 0; font-size: 1.2rem; }
-  label { display: block; font-size: 0.85rem; margin: 10px 0 4px; font-weight: bold; }
-  input, select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 0.95rem;
-  }
-  button.btn-primario {
-    width: 100%;
-    padding: 11px;
-    margin-top: 16px;
-    background: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-  button.btn-primario:hover { background: #1e4fc7; }
-  .error-login { color: #b91c1c; font-size: 0.85rem; margin-top: 10px; text-align: center; }
-
-  /* --- TABS --- */
-  .tabs { display: flex; gap: 6px; margin-bottom: 16px; }
-  .tab {
+  .header-brand { display: flex; align-items: center; gap: 12px; }
+  .header-brand img { width: 38px; height: 38px; object-fit: contain; }
+  .header-brand .eyebrow { color: var(--gold-500); font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; margin: 0; }
+  .header-brand h1 { color: var(--white); font-size: 1.05rem; font-weight: 600; }
+  header button#btnLogout {
+    background: rgba(255,255,255,0.08);
+    color: #E7ECF2;
+    border: 1px solid rgba(255,255,255,0.18);
     padding: 9px 16px;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    transition: background 0.15s ease;
+  }
+  header button#btnLogout:hover { background: rgba(255,255,255,0.16); }
+
+  .contenedor { max-width: 960px; margin: 30px auto; padding: 0 20px; }
+
+  /* ---------- TABS ---------- */
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tab {
+    padding: 10px 18px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 999px;
     cursor: pointer;
     font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    transition: all 0.15s ease;
   }
-  .tab.activo { background: #2563eb; color: white; border-color: #2563eb; }
-
-  .oculto { display: none; }
+  .tab:hover { border-color: var(--navy-600); color: var(--navy-800); }
+  .tab.activo { background: var(--navy-800); color: var(--white); border-color: var(--navy-800); }
 
   .card {
-    background: white;
-    border-radius: 10px;
-    padding: 16px;
-    margin-bottom: 14px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
   }
+  .card h3 { font-size: 1.1rem; margin-bottom: 4px; }
+  .card-eyebrow { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold-600); font-weight: 700; margin: 0 0 6px; }
+  .card-hint { font-size: 0.8rem; color: var(--ink-soft); margin-top: -6px; margin-bottom: 18px; }
 
-  /* --- Comprobantes pendientes --- */
+  /* ---------- Comprobantes pendientes ---------- */
   .comprobante-item {
     display: flex;
-    gap: 14px;
-    padding: 12px 0;
-    border-bottom: 1px solid #eee;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid #F0EEE6;
     align-items: center;
   }
   .comprobante-item:last-child { border-bottom: none; }
   .comprobante-item img {
-    width: 70px;
-    height: 70px;
+    width: 64px;
+    height: 64px;
     object-fit: cover;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
-    border: 1px solid #ddd;
+    border: 1.5px solid var(--border);
+    transition: transform 0.15s ease;
   }
-  .comprobante-info { flex: 1; font-size: 0.85rem; }
-  .comprobante-info strong { display: block; font-size: 0.95rem; }
-  .acciones { display: flex; gap: 6px; }
+  .comprobante-item img:hover { transform: scale(1.06); }
+  .comprobante-info { flex: 1; font-size: 0.85rem; color: var(--ink-soft); }
+  .comprobante-info strong { display: block; font-size: 0.98rem; color: var(--navy-950); font-family: 'Fraunces', serif; font-weight: 600; margin-bottom: 2px; }
+  .acciones { display: flex; gap: 8px; }
   .btn-aprobar, .btn-rechazar {
-    padding: 7px 12px;
+    padding: 9px 14px;
     border: none;
-    border-radius: 6px;
-    font-size: 0.8rem;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
     cursor: pointer;
     color: white;
+    transition: opacity 0.15s ease;
   }
-  .btn-aprobar { background: #16a34a; }
-  .btn-rechazar { background: #dc2626; }
+  .btn-aprobar { background: var(--success); }
+  .btn-rechazar { background: var(--danger); }
+  .btn-aprobar:hover, .btn-rechazar:hover { opacity: 0.88; }
 
-  /* --- Listado estudiantes --- */
-  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid #eee; }
-  th { color: #555; font-size: 0.75rem; text-transform: uppercase; }
-  .badge { padding: 3px 9px; border-radius: 999px; font-size: 0.72rem; font-weight: bold; }
-  .badge-ok { background: #dcfce7; color: #15803d; }
-  .badge-deuda { background: #fee2e2; color: #b91c1c; }
+  /* ---------- Tabla estudiantes ---------- */
+  table { width: 100%; border-collapse: collapse; font-size: 0.86rem; font-variant-numeric: tabular-nums; }
+  th, td { text-align: left; padding: 11px 8px; border-bottom: 1px solid #F0EEE6; }
+  th { color: var(--ink-soft); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+  td:first-child, th:first-child { padding-left: 2px; }
 
-  .vacio { text-align: center; color: #888; padding: 20px; font-size: 0.85rem; }
+  .badge { padding: 4px 11px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.02em; }
+  .badge-ok {
+    background: var(--gold-100); color: var(--gold-600); border: 1.5px solid var(--gold-500);
+    font-family: 'Fraunces', serif; font-style: italic;
+  }
+  .badge-deuda { background: var(--danger-bg); color: var(--danger); }
 
-  /* --- Modal imagen --- */
+  .vacio { text-align: center; color: var(--ink-soft); padding: 26px; font-size: 0.88rem; }
+
+  /* ---------- Modal imagen ---------- */
   .modal-overlay {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.75);
+    background: rgba(10,31,56,0.85);
     display: flex; align-items: center; justify-content: center;
     z-index: 100;
+    backdrop-filter: blur(2px);
   }
-  .modal-overlay img { max-width: 90%; max-height: 90%; border-radius: 8px; }
+  .modal-overlay img { max-width: 90%; max-height: 90%; border-radius: 10px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+
+  /* ---------- Registro ---------- */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+  @media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 
 <!-- ================= LOGIN ================= -->
 <div id="vistaLogin">
-  <h2>Panel Administrativo<br><small style="font-weight:normal; color:#666;">U.E. Potrero Largo</small></h2>
-  <label for="loginEmail">Correo</label>
-  <input type="email" id="loginEmail" placeholder="admin@potrerolargo.com" />
-  <label for="loginPass">Contraseña</label>
-  <input type="password" id="loginPass" />
-  <button class="btn-primario" id="btnLogin">Ingresar</button>
-  <div class="error-login" id="errorLogin"></div>
+  <div class="login-box">
+    <img class="login-crest" src="URL_DEL_LOGO_AQUI" alt="Escudo U.E. Potrero Largo" />
+    <p class="eyebrow">Unidad Educativa Potrero Largo</p>
+    <h2>Panel Administrativo</h2>
+    <label for="loginEmail">Correo</label>
+    <input type="email" id="loginEmail" placeholder="admin@potrerolargo.com" />
+    <label for="loginPass">Contraseña</label>
+    <input type="password" id="loginPass" />
+    <button class="btn-primario" id="btnLogin">Ingresar</button>
+    <div class="error-login oculto" id="errorLogin"></div>
+  </div>
 </div>
 
-<!-- ================= PANEL (oculto hasta iniciar sesión) ================= -->
+<!-- ================= PANEL ================= -->
 <div id="vistaPanel" class="oculto">
   <header>
-    <h1>Panel Administrativo - U.E. Potrero Largo</h1>
+    <div class="header-brand">
+      <img src="URL_DEL_LOGO_AQUI" alt="Escudo" />
+      <div>
+        <p class="eyebrow">Unidad Educativa Potrero Largo</p>
+        <h1>Panel Administrativo</h1>
+      </div>
+    </div>
     <button id="btnLogout">Cerrar sesión</button>
   </header>
 
@@ -164,15 +266,19 @@
       <div class="tab" data-tab="registro">Registrar estudiante</div>
     </div>
 
-    <!-- TAB 1: comprobantes en revisión -->
+    <!-- TAB 1 -->
     <div id="tabRevision" class="card">
-      <h3 style="margin-top:0;">Comprobantes pendientes de aprobación</h3>
+      <p class="card-eyebrow">Bandeja de aprobación</p>
+      <h3>Comprobantes pendientes</h3>
+      <p class="card-hint">Revisa cada imagen antes de aprobar. Al aprobar, la mensualidad queda marcada como pagada.</p>
       <div id="listaComprobantes"><p class="vacio">Cargando...</p></div>
     </div>
 
-    <!-- TAB 2: listado de estudiantes -->
+    <!-- TAB 2 -->
     <div id="tabEstudiantes" class="card oculto">
-      <h3 style="margin-top:0;">Estudiantes y estado de mensualidades</h3>
+      <p class="card-eyebrow">Vista general</p>
+      <h3>Estudiantes y estado de mensualidades</h3>
+      <p class="card-hint">Listado completo con la cantidad de meses pendientes por estudiante.</p>
       <table>
         <thead>
           <tr><th>RUDE</th><th>Nombre</th><th>Curso</th><th>Meses pendientes</th><th>Estado</th></tr>
@@ -181,39 +287,58 @@
       </table>
     </div>
 
-    <!-- TAB 3: registrar nuevo estudiante -->
+    <!-- TAB 3 -->
     <div id="tabRegistro" class="card oculto">
-      <h3 style="margin-top:0;">Registrar nuevo estudiante</h3>
-      <p style="font-size:0.8rem; color:#666; margin-top:-8px;">
-        Al guardar, se crean automáticamente las 12 mensualidades del año (Enero a Diciembre) en estado "pendiente".
-      </p>
+      <p class="card-eyebrow">Alta de estudiante</p>
+      <h3>Registrar nuevo estudiante</h3>
+      <p class="card-hint">Al guardar, se generan automáticamente las 12 mensualidades del año en estado "pendiente".</p>
 
-      <label for="regRude">Código RUDE</label>
-      <input type="text" id="regRude" placeholder="Ej: 1234567LP" />
+      <div class="form-grid">
+        <div>
+          <label for="regRude">Código RUDE</label>
+          <input type="text" id="regRude" placeholder="Ej: 1234567LP" />
+        </div>
+        <div>
+          <label for="regCurso">Curso</label>
+          <input type="text" id="regCurso" placeholder="Ej: 3ro B" />
+        </div>
+      </div>
 
-      <label for="regNombre">Nombre completo</label>
-      <input type="text" id="regNombre" placeholder="Ej: Juan Pérez Mamani" />
+      <div class="form-grid">
+        <div>
+          <label for="regNombre">Nombre completo</label>
+          <input type="text" id="regNombre" placeholder="Ej: Juan Pérez Mamani" />
+        </div>
+        <div>
+          <label for="regApellido">Apellido paterno</label>
+          <input type="text" id="regApellido" placeholder="Ej: Pérez" />
+        </div>
+      </div>
 
-      <label for="regApellido">Apellido paterno (para validar la consulta del padre)</label>
-      <input type="text" id="regApellido" placeholder="Ej: Pérez" />
+      <div class="form-grid">
+        <div>
+          <label for="regNombrePadre">Nombre del padre/madre responsable</label>
+          <input type="text" id="regNombrePadre" placeholder="Ej: María Mamani" />
+        </div>
+        <div>
+          <label for="regTelefono">Teléfono de contacto</label>
+          <input type="text" id="regTelefono" placeholder="Ej: 70012345" />
+        </div>
+      </div>
 
-      <label for="regCurso">Curso</label>
-      <input type="text" id="regCurso" placeholder="Ej: 3ro B" />
-
-      <label for="regNombrePadre">Nombre del padre/madre responsable</label>
-      <input type="text" id="regNombrePadre" placeholder="Ej: María Mamani" />
-
-      <label for="regTelefono">Teléfono de contacto</label>
-      <input type="text" id="regTelefono" placeholder="Ej: 70012345" />
-
-      <label for="regAnio">Año de las mensualidades a generar</label>
-      <input type="number" id="regAnio" value="2026" />
-
-      <label for="regMonto">Monto de la mensualidad (Bs)</label>
-      <input type="number" id="regMonto" value="13" />
+      <div class="form-grid">
+        <div>
+          <label for="regAnio">Año de las mensualidades</label>
+          <input type="number" id="regAnio" value="2026" />
+        </div>
+        <div>
+          <label for="regMonto">Monto de la mensualidad (Bs)</label>
+          <input type="number" id="regMonto" value="13" />
+        </div>
+      </div>
 
       <button class="btn-primario" id="btnRegistrarEstudiante">Guardar estudiante y generar mensualidades</button>
-      <div id="mensajeRegistro" style="margin-top:10px; font-size:0.85rem;"></div>
+      <div id="mensajeRegistro" style="margin-top:12px; font-size:0.85rem;"></div>
     </div>
   </div>
 </div>
@@ -244,18 +369,19 @@
     const email = document.getElementById("loginEmail").value.trim();
     const pass = document.getElementById("loginPass").value;
     const errorDiv = document.getElementById("errorLogin");
+    errorDiv.classList.add("oculto");
     errorDiv.textContent = "";
 
     try {
       await auth.signInWithEmailAndPassword(email, pass);
     } catch (error) {
       errorDiv.textContent = "Correo o contraseña incorrectos.";
+      errorDiv.classList.remove("oculto");
     }
   });
 
   document.getElementById("btnLogout").addEventListener("click", () => auth.signOut());
 
-  // Detecta si ya hay sesión iniciada (o cuando cambia)
   auth.onAuthStateChanged(user => {
     if (user) {
       document.getElementById("vistaLogin").classList.add("oculto");
@@ -291,7 +417,6 @@
       return;
     }
 
-    // Junta cada mensualidad con los datos del estudiante correspondiente
     const items = [];
     for (const doc of snapshot.docs) {
       const m = { id: doc.id, ...doc.data() };
@@ -318,7 +443,6 @@
       contenedor.appendChild(div);
     });
 
-    // Eventos de aprobar / rechazar
     contenedor.querySelectorAll(".btn-aprobar").forEach(btn => {
       btn.addEventListener("click", () => actualizarEstadoMensualidad(btn.dataset.id, "pagado"));
     });
@@ -332,8 +456,8 @@
       estado: nuevoEstado,
       fechaAprobado: nuevoEstado === "pagado" ? new Date().toISOString() : null
     });
-    cargarComprobantesPendientes(); // refresca la bandeja
-    cargarEstudiantes(); // refresca el listado general también
+    cargarComprobantesPendientes();
+    cargarEstudiantes();
   }
 
   function verImagenGrande(url) {
@@ -403,23 +527,20 @@
     mensajeDiv.innerHTML = "";
 
     try {
-      // 1. Verifica que no exista ya un estudiante con ese RUDE
       const existente = await db.collection("estudiantes").where("rude", "==", rude).get();
       if (!existente.empty) {
         throw new Error("Ya existe un estudiante registrado con ese RUDE.");
       }
 
-      // 2. Guarda el estudiante
       await db.collection("estudiantes").add({
         rude, nombre, apellido, curso, nombrePadre,
         telefonoContacto: telefono,
         activo: true
       });
 
-      // 3. Genera las 12 mensualidades del año usando un batch (una sola operación atómica)
       const batch = db.batch();
       for (let mes = 1; mes <= 12; mes++) {
-        const ref = db.collection("mensualidades").doc(); // ID automático
+        const ref = db.collection("mensualidades").doc();
         batch.set(ref, {
           rude, mes, anio, monto,
           estado: "pendiente",
@@ -430,12 +551,10 @@
       }
       await batch.commit();
 
-      mensajeDiv.innerHTML = `<div class="mensaje-info info-ok" style="padding:10px; border-radius:6px; background:#dcfce7; color:#15803d;">Estudiante registrado y 12 mensualidades generadas correctamente ✓</div>`;
+      mensajeDiv.innerHTML = `<div style="padding:10px 13px; border-radius:8px; background:var(--success-bg); color:var(--success); font-weight:500;">Estudiante registrado y 12 mensualidades generadas correctamente ✓</div>`;
 
-      // Limpia el formulario
       ["regRude","regNombre","regApellido","regCurso","regNombrePadre","regTelefono"].forEach(id => document.getElementById(id).value = "");
 
-      // Refresca el listado de estudiantes por si el admin cambia de pestaña
       cargarEstudiantes();
 
     } catch (error) {
