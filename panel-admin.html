@@ -59,10 +59,11 @@
     text-align: center;
   }
   .login-crest {
-    width: 58px; height: 58px;
+    width: 92px; height: 92px;
     object-fit: contain;
-    margin: 0 auto 14px;
+    margin: 0 auto 16px;
     display: block;
+    filter: drop-shadow(0 6px 14px rgba(10,31,56,0.18));
   }
   .login-box .eyebrow {
     font-size: 0.7rem;
@@ -118,7 +119,7 @@
     border-bottom: 3px solid var(--gold-500);
   }
   .header-brand { display: flex; align-items: center; gap: 12px; }
-  .header-brand img { width: 38px; height: 38px; object-fit: contain; }
+  .header-brand img { width: 52px; height: 52px; object-fit: contain; }
   .header-brand .eyebrow { color: var(--gold-500); font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; margin: 0; }
   .header-brand h1 { color: var(--white); font-size: 1.05rem; font-weight: 600; }
   header button#btnLogout {
@@ -250,7 +251,7 @@
 <div id="vistaPanel" class="oculto">
   <header>
     <div class="header-brand">
-      <img src="https://res.cloudinary.com/iw5zw5hr/image/upload/v1786712080/logopotrerolargo.png" alt="Escudo" />
+      <img src="URL_DEL_LOGO_AQUI" alt="Escudo" />
       <div>
         <p class="eyebrow">Unidad Educativa Potrero Largo</p>
         <h1>Panel Administrativo</h1>
@@ -281,7 +282,7 @@
       <p class="card-hint">Listado completo con la cantidad de meses pendientes por estudiante.</p>
       <table>
         <thead>
-          <tr><th>RUDE</th><th>Nombre</th><th>Curso</th><th>Meses pendientes</th><th>Estado</th></tr>
+          <tr><th>CI</th><th>Nombre</th><th>Curso</th><th>Meses pendientes</th><th>Estado</th></tr>
         </thead>
         <tbody id="tablaEstudiantes"></tbody>
       </table>
@@ -295,8 +296,8 @@
 
       <div class="form-grid">
         <div>
-          <label for="regRude">Código RUDE</label>
-          <input type="text" id="regRude" placeholder="Ej: 1234567LP" />
+          <label for="regCI">Carnet de Identidad (CI)</label>
+          <input type="text" id="regCI" placeholder="Ej: 12345678" />
         </div>
         <div>
           <label for="regCurso">Curso</label>
@@ -351,12 +352,12 @@
 <script>
   // ⚠️ Reemplaza con tu firebaseConfig real (el mismo de los otros archivos)
   const firebaseConfig = {
-    apiKey: "AIzaSyCN9YlG5ZUlKZtuRYx6QWpcdyLsSN3tpko",
-    authDomain: "potrero-largo-pagos.firebaseapp.com",
-    projectId: "potrero-largo-pagos",
-    storageBucket: "potrero-largo-pagos.firebasestorage.app",
-    messagingSenderId: "964536790761",
-    appId: "1:964536790761:web:37082df7af210332ca0a78"
+    apiKey: "TU_API_KEY",
+    authDomain: "TU_PROYECTO.firebaseapp.com",
+    projectId: "TU_PROYECTO",
+    storageBucket: "TU_PROYECTO.appspot.com",
+    messagingSenderId: "TU_SENDER_ID",
+    appId: "TU_APP_ID"
   };
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
@@ -420,7 +421,7 @@
     const items = [];
     for (const doc of snapshot.docs) {
       const m = { id: doc.id, ...doc.data() };
-      const estSnap = await db.collection("estudiantes").where("rude", "==", m.rude).get();
+      const estSnap = await db.collection("estudiantes").where("ci", "==", m.ci).get();
       m.nombreEstudiante = estSnap.empty ? "(estudiante no encontrado)" : estSnap.docs[0].data().nombre;
       items.push(m);
     }
@@ -433,7 +434,7 @@
         <img src="${m.comprobanteUrl}" alt="Comprobante" onclick="verImagenGrande('${m.comprobanteUrl}')" />
         <div class="comprobante-info">
           <strong>${m.nombreEstudiante}</strong>
-          RUDE: ${m.rude} — ${meses[m.mes - 1]} ${m.anio} — Bs ${m.monto}
+          CI: ${m.ci} — ${meses[m.mes - 1]} ${m.anio} — Bs ${m.monto}
         </div>
         <div class="acciones">
           <button class="btn-aprobar" data-id="${m.id}">Aprobar</button>
@@ -479,7 +480,7 @@
     for (const doc of estudiantesSnap.docs) {
       const est = doc.data();
       const mensualidadesSnap = await db.collection("mensualidades")
-        .where("rude", "==", est.rude)
+        .where("ci", "==", est.ci)
         .where("estado", "!=", "pagado")
         .get();
 
@@ -487,7 +488,7 @@
 
       filas.push(`
         <tr>
-          <td>${est.rude}</td>
+          <td>${est.ci}</td>
           <td>${est.nombre}</td>
           <td>${est.curso}</td>
           <td>${pendientes}</td>
@@ -505,7 +506,7 @@
   document.getElementById("btnRegistrarEstudiante").addEventListener("click", registrarEstudiante);
 
   async function registrarEstudiante() {
-    const rude = document.getElementById("regRude").value.trim();
+    const ci = document.getElementById("regCI").value.trim();
     const nombre = document.getElementById("regNombre").value.trim();
     const apellido = document.getElementById("regApellido").value.trim();
     const curso = document.getElementById("regCurso").value.trim();
@@ -517,8 +518,8 @@
     const mensajeDiv = document.getElementById("mensajeRegistro");
     const boton = document.getElementById("btnRegistrarEstudiante");
 
-    if (!rude || !nombre || !apellido || !curso) {
-      mensajeDiv.innerHTML = `<div class="error-login">Completa al menos RUDE, nombre, apellido y curso.</div>`;
+    if (!ci || !nombre || !apellido || !curso) {
+      mensajeDiv.innerHTML = `<div class="error-login">Completa al menos CI, nombre, apellido y curso.</div>`;
       return;
     }
 
@@ -527,13 +528,13 @@
     mensajeDiv.innerHTML = "";
 
     try {
-      const existente = await db.collection("estudiantes").where("rude", "==", rude).get();
+      const existente = await db.collection("estudiantes").where("ci", "==", ci).get();
       if (!existente.empty) {
-        throw new Error("Ya existe un estudiante registrado con ese RUDE.");
+        throw new Error("Ya existe un estudiante registrado con ese CI.");
       }
 
       await db.collection("estudiantes").add({
-        rude, nombre, apellido, curso, nombrePadre,
+        ci, nombre, apellido, curso, nombrePadre,
         telefonoContacto: telefono,
         activo: true
       });
@@ -542,7 +543,7 @@
       for (let mes = 1; mes <= 12; mes++) {
         const ref = db.collection("mensualidades").doc();
         batch.set(ref, {
-          rude, mes, anio, monto,
+          ci, mes, anio, monto,
           estado: "pendiente",
           comprobanteUrl: null,
           fechaSubida: null,
@@ -553,7 +554,7 @@
 
       mensajeDiv.innerHTML = `<div style="padding:10px 13px; border-radius:8px; background:var(--success-bg); color:var(--success); font-weight:500;">Estudiante registrado y 12 mensualidades generadas correctamente ✓</div>`;
 
-      ["regRude","regNombre","regApellido","regCurso","regNombrePadre","regTelefono"].forEach(id => document.getElementById(id).value = "");
+      ["regCI","regNombre","regApellido","regCurso","regNombrePadre","regTelefono"].forEach(id => document.getElementById(id).value = "");
 
       cargarEstudiantes();
 

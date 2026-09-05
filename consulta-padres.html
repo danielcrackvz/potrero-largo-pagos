@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Consulta de Mensualidades - U.E. Potrero Largo</title>
+<title>Mensualidades - U.E. Potrero Largo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,7 +16,10 @@
     --gold-500: #C89B3C;
     --gold-600: #A87C22;
     --gold-100: #F6E9CB;
-    --paper: #F7F5EF;
+    --green-500: #3E9B3E;
+    --green-600: #2F7D2F;
+    --green-bg: #E7F4E7;
+    --paper: #F2F1EC;
     --white: #FFFFFF;
     --ink: #152436;
     --ink-soft: #566374;
@@ -27,7 +30,7 @@
     --danger-bg: #F7E7E3;
     --warning: #B4791F;
     --warning-bg: #FBEEDA;
-    --shadow: 0 1px 2px rgba(10,31,56,0.06), 0 8px 24px -12px rgba(10,31,56,0.18);
+    --shadow: 0 1px 2px rgba(10,31,56,0.06), 0 10px 28px -14px rgba(10,31,56,0.22);
   }
   * { box-sizing: border-box; }
   body {
@@ -36,338 +39,346 @@
     background: var(--paper);
     color: var(--ink);
     -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
   }
   h1, h2, h3 { font-family: 'Fraunces', serif; margin: 0; color: var(--navy-950); }
   .oculto { display: none !important; }
+  button { font-family: 'Inter', sans-serif; cursor: pointer; }
+  input, select { font-family: 'Inter', sans-serif; }
 
-  /* ---------- HEADER ---------- */
-  .site-header {
-    background: linear-gradient(180deg, var(--navy-950) 0%, var(--navy-800) 100%);
-    padding: 22px 20px;
-    border-bottom: 3px solid var(--gold-500);
-  }
-  .header-inner {
-    max-width: 640px;
-    margin: 0 auto;
+  .pantalla { min-height: 100vh; display: flex; flex-direction: column; }
+  .contenedor { max-width: 480px; margin: 0 auto; width: 100%; padding: 0 20px; flex: 1; }
+
+  /* ---------- TOPBAR (pantallas 2 y 3) ---------- */
+  .topbar {
+    background: linear-gradient(180deg, var(--navy-950), var(--navy-800));
+    padding: 16px 18px;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
+    border-bottom: 3px solid var(--gold-500);
   }
-  .crest {
-    width: 52px;
-    height: 52px;
-    object-fit: contain;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));
-  }
-  .header-text .eyebrow {
-    margin: 0;
+  .btn-volver {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
     color: var(--gold-500);
-    font-size: 0.68rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    font-weight: 600;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
   }
-  .header-text h1 {
-    color: var(--white);
-    font-size: 1.35rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-  }
+  .topbar-crest { width: 40px; height: 40px; object-fit: contain; flex-shrink: 0; }
+  .topbar-title { color: var(--white); font-size: 1rem; font-weight: 600; font-family: 'Fraunces', serif; }
+  .topbar-sub { color: var(--gold-500); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
 
-  /* ---------- HERO ---------- */
-  .hero {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 38px 20px 8px;
-    text-align: center;
-    position: relative;
+  /* ---------- PANTALLA 1: LOGIN ---------- */
+  #pantallaLogin {
+    background: radial-gradient(circle at 50% -10%, var(--navy-800) 0%, var(--navy-950) 55%);
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
   }
-  .hero h2 {
-    font-size: 1.7rem;
-    font-weight: 600;
-    line-height: 1.25;
-  }
-  .hero p {
-    color: var(--ink-soft);
-    font-size: 0.95rem;
-    max-width: 440px;
-    margin: 10px auto 0;
-    line-height: 1.5;
-  }
-
-  main { padding-bottom: 60px; }
-
-  /* ---------- CARDS ---------- */
-  .contenedor { max-width: 640px; margin: 0 auto; padding: 0 20px; }
-  .card {
+  .login-card {
     background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 26px;
-    margin-top: 22px;
-    box-shadow: var(--shadow);
-  }
-  .card-eyebrow {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--gold-600);
-    font-weight: 700;
-    margin: 0 0 6px;
-  }
-  .card h3.card-title {
-    font-size: 1.15rem;
-    margin-bottom: 4px;
-  }
-
-  label {
-    display: block;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--navy-800);
-    margin: 16px 0 6px;
-  }
-  label:first-of-type { margin-top: 4px; }
-  input, select {
+    max-width: 380px;
     width: 100%;
-    padding: 12px 13px;
+    margin: 0 auto;
+    border-radius: 18px;
+    padding: 40px 30px 32px;
+    text-align: center;
+    box-shadow: 0 24px 70px -20px rgba(0,0,0,0.55);
+  }
+  .login-crest {
+    width: 108px;
+    height: 108px;
+    object-fit: contain;
+    margin: 0 auto 18px;
+    display: block;
+    filter: drop-shadow(0 6px 14px rgba(10,31,56,0.18));
+  }
+  .login-eyebrow { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-600); font-weight: 700; margin: 0 0 4px; }
+  .login-card h1 { font-size: 1.4rem; margin-bottom: 6px; }
+  .login-card p.desc { color: var(--ink-soft); font-size: 0.86rem; margin: 0 0 26px; line-height: 1.4; }
+
+  label { display: block; text-align: left; font-size: 0.78rem; font-weight: 600; color: var(--navy-800); margin: 14px 0 6px; }
+  input {
+    width: 100%;
+    padding: 13px 14px;
     border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-family: 'Inter', sans-serif;
+    border-radius: 9px;
+    font-size: 1rem;
     color: var(--ink);
     background: var(--paper);
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
-  input:focus, select:focus {
+  input:focus {
     outline: none;
     border-color: var(--navy-600);
     box-shadow: 0 0 0 3px rgba(45,111,166,0.15);
     background: var(--white);
   }
 
-  button {
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
-  }
-  .btn-primario {
+  .btn-verde {
     width: 100%;
-    padding: 13px;
-    margin-top: 20px;
-    background: var(--navy-800);
+    padding: 15px;
+    margin-top: 22px;
+    background: var(--green-500);
     color: var(--white);
     border: none;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 600;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
     letter-spacing: 0.01em;
+    box-shadow: 0 6px 18px -6px rgba(62,155,62,0.55);
     transition: background 0.15s ease, transform 0.1s ease;
   }
-  .btn-primario:hover { background: var(--navy-700); }
-  .btn-primario:active { transform: scale(0.99); }
-  .btn-primario:disabled { background: #9AA5B1; cursor: not-allowed; }
+  .btn-verde:hover { background: var(--green-600); }
+  .btn-verde:active { transform: scale(0.99); }
+  .btn-verde:disabled { background: #B7C2CB; box-shadow: none; cursor: not-allowed; }
 
-  #resultadoBusqueda { margin-top: 4px; }
-  .mensaje-info {
-    font-size: 0.83rem;
-    padding: 10px 13px;
-    border-radius: 8px;
-    margin-top: 12px;
-    font-weight: 500;
-  }
+  .mensaje-info { font-size: 0.83rem; padding: 11px 14px; border-radius: 9px; margin-top: 14px; font-weight: 500; text-align: left; }
   .info-ok { background: var(--success-bg); color: var(--success); }
   .info-error { background: var(--danger-bg); color: var(--danger); }
 
-  /* ---------- RESULTADO / LEDGER ---------- */
-  .resultado-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 18px;
-    padding-bottom: 18px;
-    border-bottom: 1px dashed var(--border);
+  /* ---------- PANTALLA 2: PERFIL / MESES ---------- */
+  #pantallaPerfil, #pantallaPago { background: var(--paper); }
+
+  .perfil-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-top: 18px;
+    box-shadow: var(--shadow);
   }
-  .seal-mini {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: var(--gold-100);
-    border: 2px solid var(--gold-500);
+  .perfil-nombre { font-size: 1.15rem; font-weight: 600; color: var(--navy-950); margin-bottom: 10px; }
+  .perfil-datos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+  .perfil-dato-label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); font-weight: 700; margin-bottom: 2px; }
+  .perfil-dato-valor { font-size: 0.9rem; color: var(--ink); font-weight: 500; }
+
+  .seccion-label {
+    margin-top: 24px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 8px;
+  }
+  .seccion-label h2 { font-size: 1.05rem; }
+  .seccion-label .puntito { width: 8px; height: 8px; border-radius: 50%; background: var(--gold-500); }
+
+  .tabla-meses {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .fila-mes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid #F0EEE6;
+  }
+  .fila-mes:last-child { border-bottom: none; }
+  .fila-mes.pagar-todo {
+    background: var(--gold-100);
+    font-weight: 700;
     color: var(--gold-600);
-    font-size: 1.1rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .fila-mes-texto { font-size: 0.92rem; color: var(--ink); }
+  .fila-mes-monto { font-size: 0.85rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; margin-left: auto; margin-right: 14px; }
+  input[type="checkbox"] {
+    width: 21px; height: 21px;
+    accent-color: var(--green-500);
+    cursor: pointer;
     flex-shrink: 0;
   }
-  #nombreEstudiante { font-size: 1.05rem; font-weight: 600; color: var(--navy-950); }
-
-  .mensualidad {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 13px 0;
-    border-bottom: 1px solid #F0EEE6;
-    font-variant-numeric: tabular-nums;
+  .fila-mes-pagado {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 16px; border-bottom: 1px solid #F0EEE6; opacity: 0.75;
   }
-  .mensualidad:last-child { border-bottom: none; }
-  .mensualidad span:first-child { font-size: 0.92rem; color: var(--ink); }
-
-  .estado {
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 5px 12px;
-    border-radius: 999px;
-  }
-  .estado.pendiente { background: var(--danger-bg); color: var(--danger); }
-  .estado.en_revision { background: var(--warning-bg); color: var(--warning); }
-  .estado.pagado {
-    background: var(--gold-100);
-    color: var(--gold-600);
+  .fila-mes-pagado:last-child { border-bottom: none; }
+  .sello-pagado {
+    font-family: 'Fraunces', serif; font-style: italic;
+    background: var(--gold-100); color: var(--gold-600);
     border: 1.5px solid var(--gold-500);
-    position: relative;
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    letter-spacing: 0.02em;
+    font-size: 0.68rem; font-weight: 700;
+    padding: 4px 11px; border-radius: 999px;
   }
 
-  /* ---------- QR / TICKET ---------- */
+  .resumen-box {
+    background: linear-gradient(180deg, var(--navy-950), var(--navy-800));
+    color: var(--white);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .resumen-linea { display: flex; justify-content: space-between; align-items: center; font-size: 0.88rem; }
+  .resumen-linea:not(:last-child) { padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.14); }
+  .resumen-linea span:first-child { color: #C7D3E0; }
+  .resumen-cantidad { color: var(--gold-500); font-weight: 700; }
+  .resumen-monto { color: var(--green-500); font-weight: 700; font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+
+  .historial-nota { text-align: center; font-size: 0.78rem; color: var(--ink-soft); margin-top: 14px; }
+
+  /* ---------- PANTALLA 3: PAGO ---------- */
   .qr-card {
     background: linear-gradient(180deg, var(--navy-950), var(--navy-800));
     color: var(--white);
     text-align: center;
-    position: relative;
-    overflow: hidden;
+    border-radius: 16px;
+    padding: 26px 20px;
+    margin-top: 18px;
+    box-shadow: var(--shadow);
   }
-  .qr-card::before, .qr-card::after {
-    content: "";
-    position: absolute;
-    width: 24px; height: 24px;
-    background: var(--paper);
-    border-radius: 50%;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  .qr-card .card-eyebrow { color: var(--gold-500); }
-  .qr-card h3 { color: var(--white); }
-  .qr-card p { color: #C7D3E0; font-size: 0.85rem; max-width: 340px; margin: 6px auto 18px; }
-  .qr-frame {
-    background: var(--white);
-    padding: 14px;
-    border-radius: 12px;
-    display: inline-block;
-    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
-  }
-  .qr-img { width: 220px; max-width: 100%; display: block; border-radius: 4px; }
-  .qr-amount {
-    margin-top: 16px;
-    display: inline-block;
-    padding: 6px 16px;
-    border: 1.5px solid var(--gold-500);
-    border-radius: 999px;
-    color: var(--gold-500);
-    font-size: 0.8rem;
-    letter-spacing: 0.05em;
-    font-weight: 600;
-  }
+  .qr-card .eyebrow { color: var(--gold-500); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+  .qr-card h2 { color: var(--white); font-size: 1.2rem; margin-bottom: 6px; }
+  .qr-card p { color: #C7D3E0; font-size: 0.84rem; max-width: 320px; margin: 0 auto 18px; }
+  .qr-frame { background: var(--white); padding: 14px; border-radius: 12px; display: inline-block; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); }
+  .qr-img { width: 210px; max-width: 100%; display: block; border-radius: 4px; }
+  .qr-monto { margin-top: 18px; font-size: 1.7rem; font-weight: 700; color: var(--white); font-family: 'Fraunces', serif; }
+  .qr-monto span { color: var(--green-500); }
 
-  /* ---------- UPLOAD ---------- */
-  input[type="file"] {
-    padding: 10px;
-    background: var(--white);
-    font-size: 0.85rem;
-  }
+  .tabla-seleccion { background: var(--white); border: 1px solid var(--border); border-radius: 14px; margin-top: 16px; overflow: hidden; box-shadow: var(--shadow); }
+  .tabla-seleccion table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+  .tabla-seleccion th { background: var(--paper); text-align: left; padding: 10px 14px; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); font-weight: 700; }
+  .tabla-seleccion td { padding: 10px 14px; border-top: 1px solid #F0EEE6; }
 
-  /* ---------- FOOTER ---------- */
-  .site-footer {
+  .upload-card {
+    background: var(--white);
+    border: 1.5px dashed var(--navy-600);
+    border-radius: 14px;
+    padding: 22px;
+    margin-top: 18px;
     text-align: center;
-    padding: 26px 20px 40px;
-    color: var(--ink-soft);
-    font-size: 0.78rem;
   }
-  .site-footer strong { color: var(--navy-800); }
+  .upload-card p.hint { font-size: 0.8rem; color: var(--ink-soft); margin: 6px 0 16px; }
+  .btn-elegir-archivo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--navy-800);
+    color: var(--white);
+    padding: 12px 20px;
+    border-radius: 9px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-elegir-archivo:hover { background: var(--navy-700); }
+  input[type="file"] { display: none; }
+  #nombreArchivo { display: block; margin-top: 10px; font-size: 0.82rem; color: var(--navy-700); font-weight: 600; }
+
+  .site-footer { text-align: center; padding: 24px 20px 34px; color: var(--ink-soft); font-size: 0.76rem; }
 </style>
 </head>
 <body>
 
-<header class="site-header">
-  <div class="header-inner">
-    <img class="crest" src="https://res.cloudinary.com/iw5zw5hr/image/upload/v1786712080/logopotrerolargo.png" alt="Escudo U.E. Potrero Largo" />
-    <div class="header-text">
-      <p class="eyebrow">Unidad Educativa</p>
-      <h1>Potrero Largo</h1>
-    </div>
-  </div>
-</header>
+<!-- ================= PANTALLA 1: LOGIN ================= -->
+<div class="pantalla" id="pantallaLogin">
+  <div class="login-card">
+    <img class="login-crest" src="https://res.cloudinary.com/iw5zw5hr/image/upload/v1786712080/logopotrerolargo.png" alt="Escudo U.E. Potrero Largo" />
+    <p class="login-eyebrow">Unidad Educativa</p>
+    <h1>Potrero Largo</h1>
+    <p class="desc">Consulta el estado de las mensualidades de tu hijo o hija y realiza tu pago en minutos.</p>
 
-<main>
-  <div class="hero">
-    <h2>Consulta y pago de tu mensualidad</h2>
-    <p>Verifica el estado de las mensualidades de tu hijo o hija y reporta tu pago en minutos, sin necesidad de venir al colegio.</p>
+    <label for="ci">Carnet de identidad del estudiante</label>
+    <input type="text" id="ci" placeholder="Ej: 12345678" inputmode="numeric" />
+
+    <label for="apellido">Apellido paterno del estudiante</label>
+    <input type="text" id="apellido" placeholder="Ej: Pérez" />
+
+    <button class="btn-verde" id="btnIngresar">Ingresar</button>
+    <div id="resultadoLogin"></div>
+  </div>
+</div>
+
+<!-- ================= PANTALLA 2: PERFIL Y MESES ================= -->
+<div class="pantalla oculto" id="pantallaPerfil">
+  <div class="topbar">
+    <button class="btn-volver" id="btnVolverLogin">‹</button>
+    <img class="topbar-crest" src="https://res.cloudinary.com/iw5zw5hr/image/upload/v1786712080/logopotrerolargo.png" alt="Escudo" />
+    <div>
+      <p class="topbar-sub">Unidad Educativa</p>
+      <p class="topbar-title">Potrero Largo</p>
+    </div>
   </div>
 
   <div class="contenedor">
-
-    <!-- Paso 1: Buscar estudiante -->
-    <div class="card" id="cardBusqueda">
-      <p class="card-eyebrow">Paso 1</p>
-      <h3 class="card-title">Busca al estudiante</h3>
-      <label for="rude">Código RUDE del estudiante</label>
-      <input type="text" id="rude" placeholder="Ej: 1234567LP" />
-
-      <label for="apellido">Apellido paterno del estudiante</label>
-      <input type="text" id="apellido" placeholder="Ej: Pérez" />
-
-      <button class="btn-primario" id="btnBuscar">Buscar</button>
-      <div id="resultadoBusqueda"></div>
-    </div>
-
-    <!-- Paso 2: Mensualidades -->
-    <div class="card oculto" id="cardMensualidades">
-      <div class="resultado-header">
-        <div class="seal-mini">✓</div>
-        <div>
-          <p class="card-eyebrow" style="margin-bottom:2px;">Estudiante encontrado</p>
-          <h3 id="nombreEstudiante"></h3>
-        </div>
+    <div class="perfil-card">
+      <div class="perfil-nombre" id="nombreEstudiantePerfil"></div>
+      <div class="perfil-datos">
+        <div><p class="perfil-dato-label">Curso</p><p class="perfil-dato-valor" id="cursoEstudiante"></p></div>
+        <div><p class="perfil-dato-label">CI Estudiante</p><p class="perfil-dato-valor" id="ciEstudiante"></p></div>
+        <div><p class="perfil-dato-label">Padre / Madre</p><p class="perfil-dato-valor" id="padreEstudiante"></p></div>
+        <div><p class="perfil-dato-label">Teléfono</p><p class="perfil-dato-valor" id="telefonoEstudiante"></p></div>
       </div>
-      <div id="listaMensualidades"></div>
     </div>
 
-    <!-- Paso 3: QR -->
-    <div class="card qr-card oculto" id="cardQR">
-      <p class="card-eyebrow">Paso 2</p>
-      <h3>Realiza tu pago</h3>
-      <p>Escanea este código desde tu banca móvil para pagar la mensualidad.</p>
+    <div class="seccion-label"><span class="puntito"></span><h2>Mensualidades pendientes</h2></div>
+    <div class="tabla-meses" id="tablaMeses"></div>
+    <p class="historial-nota oculto" id="notaSinPendientes">Este estudiante no tiene mensualidades pendientes 🎉</p>
+
+    <div class="resumen-box">
+      <div class="resumen-linea"><span>Meses seleccionados</span><span class="resumen-cantidad" id="resumenCantidad">0</span></div>
+      <div class="resumen-linea"><span>Monto a pagar</span><span class="resumen-monto">Bs <span id="resumenMonto">0</span></span></div>
+    </div>
+
+    <button class="btn-verde" id="btnSiguienteMeses" disabled>Siguiente</button>
+  </div>
+</div>
+
+<!-- ================= PANTALLA 3: PAGO ================= -->
+<div class="pantalla oculto" id="pantallaPago">
+  <div class="topbar">
+    <button class="btn-volver" id="btnVolverPerfil">‹</button>
+    <img class="topbar-crest" src="https://res.cloudinary.com/iw5zw5hr/image/upload/v1786712080/logopotrerolargo.png" alt="Escudo" />
+    <div>
+      <p class="topbar-sub">Unidad Educativa</p>
+      <p class="topbar-title">Potrero Largo</p>
+    </div>
+  </div>
+
+  <div class="contenedor">
+    <div class="qr-card">
+      <p class="eyebrow">Paso final</p>
+      <h2>Escanea y paga</h2>
+      <p>Usa tu banca móvil para escanear este código QR y transferir el monto exacto.</p>
       <div class="qr-frame">
         <img class="qr-img" src="https://res.cloudinary.com/iw5zw5hr/image/upload/v1786693692/WhatsApp_Image_2026-08-12_at_15.03.13.jpg" alt="QR de pago" />
       </div>
-      <br>
-      <span class="qr-amount">Bs 13 por mensualidad</span>
+      <div class="qr-monto">Bs <span id="montoAPagar">0</span></div>
     </div>
 
-    <!-- Paso 4: Comprobante -->
-    <div class="card oculto" id="cardComprobante">
-      <p class="card-eyebrow">Paso 3</p>
-      <h3 class="card-title">Sube tu comprobante de pago</h3>
-      <label for="mesComprobante">¿A qué mes corresponde el pago?</label>
-      <select id="mesComprobante"></select>
+    <div class="tabla-seleccion">
+      <table>
+        <thead><tr><th>Fecha</th><th>Glosa</th><th>Monto</th></tr></thead>
+        <tbody id="tablaSeleccionBody"></tbody>
+      </table>
+    </div>
 
-      <label for="archivoComprobante">Foto del comprobante</label>
+    <div class="upload-card">
+      <p style="font-weight:600; color:var(--navy-950);">Sube tu comprobante de pago</p>
+      <p class="hint">Una foto o captura de pantalla de la transferencia realizada.</p>
+      <label class="btn-elegir-archivo" for="archivoComprobante">📎 Seleccionar comprobante</label>
       <input type="file" id="archivoComprobante" accept="image/*" />
-
-      <button class="btn-primario" id="btnSubirComprobante">Enviar comprobante</button>
-      <div id="mensajeComprobante"></div>
+      <span id="nombreArchivo">Ningún archivo seleccionado</span>
     </div>
 
+    <button class="btn-verde" id="btnEnviarComprobante">Enviar comprobante</button>
+    <div id="mensajeComprobante"></div>
   </div>
-</main>
 
-<footer class="site-footer">
-  <strong>U.E. Potrero Largo</strong> — Sistema de mensualidades
-</footer>
+  <div class="site-footer">U.E. Potrero Largo — Sistema de mensualidades</div>
+</div>
 
 <!-- SDK de Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -392,29 +403,29 @@
 
   const meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
-  let estudianteActual = null;
-  let mensualidadesActuales = [];
+  let estudianteActual = null;      // datos del estudiante encontrado
+  let mensualidadesPendientes = []; // solo las pendientes, seleccionables
+  let seleccionActual = [];         // las que el padre eligió pagar
 
-  document.getElementById("btnBuscar").addEventListener("click", buscarEstudiante);
+  // ---------- PANTALLA 1: LOGIN / BÚSQUEDA ----------
+  document.getElementById("btnIngresar").addEventListener("click", buscarEstudiante);
 
   async function buscarEstudiante() {
-    const rude = document.getElementById("rude").value.trim();
+    const ci = document.getElementById("ci").value.trim();
     const apellido = document.getElementById("apellido").value.trim().toLowerCase();
-    const resultadoDiv = document.getElementById("resultadoBusqueda");
+    const resultadoDiv = document.getElementById("resultadoLogin");
 
-    if (!rude || !apellido) {
+    if (!ci || !apellido) {
       resultadoDiv.innerHTML = `<div class="mensaje-info info-error">Completa ambos campos.</div>`;
       return;
     }
-
     resultadoDiv.innerHTML = "";
 
     try {
-      const snapshot = await db.collection("estudiantes").where("rude", "==", rude).get();
+      const snapshot = await db.collection("estudiantes").where("ci", "==", ci).get();
 
       if (snapshot.empty) {
-        resultadoDiv.innerHTML = `<div class="mensaje-info info-error">No se encontró ningún estudiante con ese RUDE.</div>`;
-        ocultarSecciones();
+        resultadoDiv.innerHTML = `<div class="mensaje-info info-error">No se encontró ningún estudiante con ese carnet de identidad.</div>`;
         return;
       }
 
@@ -422,90 +433,132 @@
       const est = doc.data();
 
       if (est.apellido.toLowerCase() !== apellido) {
-        resultadoDiv.innerHTML = `<div class="mensaje-info info-error">El apellido no coincide con el RUDE ingresado.</div>`;
-        ocultarSecciones();
+        resultadoDiv.innerHTML = `<div class="mensaje-info info-error">El apellido no coincide con el CI ingresado.</div>`;
         return;
       }
 
-      estudianteActual = est.rude;
-      resultadoDiv.innerHTML = `<div class="mensaje-info info-ok">Estudiante encontrado ✓</div>`;
-      document.getElementById("nombreEstudiante").textContent = `${est.nombre} — ${est.curso}`;
-
-      await cargarMensualidades(est.rude);
-      mostrarSecciones();
+      estudianteActual = est;
+      await cargarPerfilYMeses(est);
+      mostrarPantalla("pantallaPerfil");
 
     } catch (error) {
       resultadoDiv.innerHTML = `<div class="mensaje-info info-error">Error al buscar: ${error.message}</div>`;
     }
   }
 
-  async function cargarMensualidades(rude) {
+  // ---------- PANTALLA 2: PERFIL + SELECCIÓN DE MESES ----------
+  async function cargarPerfilYMeses(est) {
+    document.getElementById("nombreEstudiantePerfil").textContent = est.nombre;
+    document.getElementById("cursoEstudiante").textContent = est.curso || "-";
+    document.getElementById("ciEstudiante").textContent = est.ci || "-";
+    document.getElementById("padreEstudiante").textContent = est.nombrePadre || "-";
+    document.getElementById("telefonoEstudiante").textContent = est.telefonoContacto || "-";
+
     const snapshot = await db.collection("mensualidades")
-      .where("rude", "==", rude)
+      .where("ci", "==", est.ci)
       .orderBy("anio")
       .orderBy("mes")
       .get();
 
-    mensualidadesActuales = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    const todas = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    mensualidadesPendientes = todas.filter(m => m.estado === "pendiente");
 
-    const lista = document.getElementById("listaMensualidades");
-    const selectMes = document.getElementById("mesComprobante");
-    lista.innerHTML = "";
-    selectMes.innerHTML = "";
+    const tabla = document.getElementById("tablaMeses");
+    const notaSinPendientes = document.getElementById("notaSinPendientes");
+    tabla.innerHTML = "";
 
-    if (mensualidadesActuales.length === 0) {
-      lista.innerHTML = `<p style="font-size:0.85rem; color:var(--ink-soft);">Aún no hay mensualidades generadas para este estudiante. Consulta en secretaría.</p>`;
+    if (mensualidadesPendientes.length === 0) {
+      tabla.classList.add("oculto");
+      notaSinPendientes.classList.remove("oculto");
+      actualizarResumen();
       return;
     }
+    tabla.classList.remove("oculto");
+    notaSinPendientes.classList.add("oculto");
 
-    mensualidadesActuales.forEach(m => {
+    // Fila "Pagar todo"
+    const filaTodo = document.createElement("div");
+    filaTodo.className = "fila-mes pagar-todo";
+    filaTodo.innerHTML = `<span>Pagar todo</span><input type="checkbox" id="chkPagarTodo" />`;
+    tabla.appendChild(filaTodo);
+
+    mensualidadesPendientes.forEach(m => {
       const fila = document.createElement("div");
-      fila.className = "mensualidad";
+      fila.className = "fila-mes";
       fila.innerHTML = `
-        <span>${meses[m.mes - 1]} ${m.anio} — Bs ${m.monto}</span>
-        <span class="estado ${m.estado}">${etiquetaEstado(m.estado)}</span>
+        <span class="fila-mes-texto">${meses[m.mes - 1]} ${m.anio}</span>
+        <span class="fila-mes-monto">Bs ${m.monto}</span>
+        <input type="checkbox" class="chk-mes" data-id="${m.id}" data-monto="${m.monto}" data-mes="${m.mes}" data-anio="${m.anio}" />
       `;
-      lista.appendChild(fila);
-
-      if (m.estado === "pendiente") {
-        const opcion = document.createElement("option");
-        opcion.value = m.id;
-        opcion.textContent = `${meses[m.mes - 1]} ${m.anio}`;
-        selectMes.appendChild(opcion);
-      }
+      tabla.appendChild(fila);
     });
 
-    if (selectMes.options.length === 0) {
-      document.getElementById("cardComprobante").classList.add("oculto");
-    }
+    document.getElementById("chkPagarTodo").addEventListener("change", (e) => {
+      document.querySelectorAll(".chk-mes").forEach(chk => chk.checked = e.target.checked);
+      actualizarResumen();
+    });
+    document.querySelectorAll(".chk-mes").forEach(chk => {
+      chk.addEventListener("change", () => {
+        const todosMarcados = [...document.querySelectorAll(".chk-mes")].every(c => c.checked);
+        document.getElementById("chkPagarTodo").checked = todosMarcados;
+        actualizarResumen();
+      });
+    });
+
+    actualizarResumen();
   }
 
-  function etiquetaEstado(estado) {
-    if (estado === "pendiente") return "Pendiente";
-    if (estado === "en_revision") return "En revisión";
-    if (estado === "pagado") return "Pagado";
-    return estado;
+  function actualizarResumen() {
+    const marcados = [...document.querySelectorAll(".chk-mes:checked")];
+    const total = marcados.reduce((suma, chk) => suma + parseFloat(chk.dataset.monto), 0);
+    document.getElementById("resumenCantidad").textContent = marcados.length;
+    document.getElementById("resumenMonto").textContent = total.toFixed(2).replace(/\.00$/, "");
+    document.getElementById("btnSiguienteMeses").disabled = marcados.length === 0;
   }
 
-  function mostrarSecciones() {
-    document.getElementById("cardMensualidades").classList.remove("oculto");
-    document.getElementById("cardQR").classList.remove("oculto");
-    document.getElementById("cardComprobante").classList.remove("oculto");
+  document.getElementById("btnSiguienteMeses").addEventListener("click", () => {
+    const marcados = [...document.querySelectorAll(".chk-mes:checked")];
+    seleccionActual = marcados.map(chk => ({
+      id: chk.dataset.id,
+      monto: parseFloat(chk.dataset.monto),
+      mes: parseInt(chk.dataset.mes),
+      anio: parseInt(chk.dataset.anio)
+    }));
+    mostrarPantallaPago();
+  });
+
+  // ---------- PANTALLA 3: PAGO ----------
+  function mostrarPantallaPago() {
+    const total = seleccionActual.reduce((s, m) => s + m.monto, 0);
+    document.getElementById("montoAPagar").textContent = total.toFixed(2).replace(/\.00$/, "");
+
+    const tbody = document.getElementById("tablaSeleccionBody");
+    tbody.innerHTML = seleccionActual.map(m => `
+      <tr>
+        <td>${m.anio}/${String(m.mes).padStart(2,"0")}</td>
+        <td>Mensualidad ${meses[m.mes - 1]}</td>
+        <td>Bs ${m.monto}</td>
+      </tr>
+    `).join("");
+
+    document.getElementById("archivoComprobante").value = "";
+    document.getElementById("nombreArchivo").textContent = "Ningún archivo seleccionado";
+    document.getElementById("mensajeComprobante").innerHTML = "";
+
+    mostrarPantalla("pantallaPago");
   }
 
-  function ocultarSecciones() {
-    document.getElementById("cardMensualidades").classList.add("oculto");
-    document.getElementById("cardQR").classList.add("oculto");
-    document.getElementById("cardComprobante").classList.add("oculto");
-  }
+  document.getElementById("archivoComprobante").addEventListener("change", (e) => {
+    const archivo = e.target.files[0];
+    document.getElementById("nombreArchivo").textContent = archivo ? archivo.name : "Ningún archivo seleccionado";
+  });
 
-  document.getElementById("btnSubirComprobante").addEventListener("click", subirComprobante);
+  document.getElementById("btnEnviarComprobante").addEventListener("click", subirComprobante);
 
   async function subirComprobante() {
-    const mensualidadId = document.getElementById("mesComprobante").value;
     const archivo = document.getElementById("archivoComprobante").files[0];
     const mensajeDiv = document.getElementById("mensajeComprobante");
-    const boton = document.getElementById("btnSubirComprobante");
+    const boton = document.getElementById("btnEnviarComprobante");
 
     if (!archivo) {
       mensajeDiv.innerHTML = `<div class="mensaje-info info-error">Selecciona una imagen primero.</div>`;
@@ -525,26 +578,46 @@
         { method: "POST", body: formData }
       );
       const data = await respuesta.json();
-
       if (!data.secure_url) throw new Error("No se pudo subir la imagen.");
 
-      await db.collection("mensualidades").doc(mensualidadId).update({
-        estado: "en_revision",
-        comprobanteUrl: data.secure_url,
-        fechaSubida: new Date().toISOString()
+      const batch = db.batch();
+      const ahora = new Date().toISOString();
+      seleccionActual.forEach(m => {
+        const ref = db.collection("mensualidades").doc(m.id);
+        batch.update(ref, { estado: "en_revision", comprobanteUrl: data.secure_url, fechaSubida: ahora });
       });
+      await batch.commit();
 
-      mensajeDiv.innerHTML = `<div class="mensaje-info info-ok">Comprobante enviado. Quedará como "En revisión" hasta que sea confirmado.</div>`;
-
-      await cargarMensualidades(estudianteActual);
+      mensajeDiv.innerHTML = `<div class="mensaje-info info-ok">Comprobante enviado. Tus mensualidades quedarán como "En revisión" hasta que sean confirmadas.</div>`;
+      boton.classList.add("oculto");
 
     } catch (error) {
       mensajeDiv.innerHTML = `<div class="mensaje-info info-error">Error al enviar: ${error.message}</div>`;
-    } finally {
       boton.disabled = false;
       boton.textContent = "Enviar comprobante";
     }
   }
+
+  // ---------- NAVEGACIÓN ----------
+  function mostrarPantalla(id) {
+    ["pantallaLogin", "pantallaPerfil", "pantallaPago"].forEach(p => {
+      document.getElementById(p).classList.toggle("oculto", p !== id);
+    });
+    window.scrollTo(0, 0);
+  }
+
+  document.getElementById("btnVolverLogin").addEventListener("click", () => {
+    document.getElementById("resultadoLogin").innerHTML = "";
+    mostrarPantalla("pantallaLogin");
+  });
+
+  document.getElementById("btnVolverPerfil").addEventListener("click", () => {
+    document.getElementById("btnEnviarComprobante").disabled = false;
+    document.getElementById("btnEnviarComprobante").textContent = "Enviar comprobante";
+    document.getElementById("btnEnviarComprobante").classList.remove("oculto");
+    if (estudianteActual) cargarPerfilYMeses(estudianteActual);
+    mostrarPantalla("pantallaPerfil");
+  });
 </script>
 
 </body>
